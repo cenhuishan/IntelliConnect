@@ -8,8 +8,7 @@ const state = {
   menuList: [],
 }
 const getters = {
-  token: () => {
-    // localStorage.setItem('access-token', state.auth)
+  token: (state) => {
     return state.auth
   },
 }
