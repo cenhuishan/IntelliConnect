@@ -1,0 +1,36 @@
+<view class="container">
+  <view class="card">
+    <view wx:if="{{mode === 'register'}}">
+      <view class="input-item">
+        <text class="input-label">用户名</text>
+        <input class="input-field" placeholder="请输入用户名" data-field="username" bindinput="onInput" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">密码</text>
+        <input class="input-field" placeholder="请输入密码" data-field="password" bindinput="onInput" password="{{true}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">邮箱</text>
+        <input class="input-field" placeholder="请输入邮箱" data-field="email" bindinput="onInput" />
+      </view>
+    </view>
+    <view wx:else>
+      <view class="input-item">
+        <text class="input-label">邮箱</text>
+        <input class="input-field" placeholder="请输入邮箱" data-field="email" bindinput="onInput" />
+        <text class="code-btn" bindtap="getCode">获取验证码</text>
+      </view>
+      <view class="input-item">
+        <text class="input-label">验证码</text>
+        <input class="input-field" placeholder="请输入验证码" data-field="code" bindinput="onInput" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">新密码</text>
+        <input class="input-field" placeholder="请输入新密码" data-field="password" bindinput="onInput" password="{{true}}" />
+      </view>
+    </view>
+  </view>
+  <button class="btn btn-primary" style="margin-top:40rpx" bindtap="onSubmit">
+    {{mode === 'register' ? '注 册' : '重置密码'}}
+  </button>
+</view>

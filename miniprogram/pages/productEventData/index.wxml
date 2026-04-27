@@ -1,0 +1,40 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无数据，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.dataName}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <view class="item-info">
+        <text class="info-text">Key: {{item.jsonKey}}</text>
+        <text class="info-text">类型: {{item.dataType}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加事件数据</text>
+      <view class="input-item">
+        <text class="input-label">数据名称</text>
+        <input class="input-field" placeholder="数据名称" data-field="dataName" bindinput="onFormInput" value="{{form.dataName}}" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">JSON Key</text>
+        <input class="input-field" placeholder="JSON Key" data-field="jsonKey" bindinput="onFormInput" value="{{form.jsonKey}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">数据类型</text>
+        <picker mode="selector" range="{{['int','float','string','bool']}}" bindchange="onTypeChange">
+          <text class="picker-text">{{form.dataType}}</text>
+        </picker>
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

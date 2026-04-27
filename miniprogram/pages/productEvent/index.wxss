@@ -1,0 +1,5 @@
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.item-name { font-size: 30rpx; font-weight: 600; color: #333; }
+.action-del { font-size: 26rpx; color: #ff4d4f; }
+.nav-hint { font-size: 24rpx; color: #1890ff; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }

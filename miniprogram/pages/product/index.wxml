@@ -1,0 +1,52 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无产品，点击+添加" />
+  <view wx:else>
+    <view class="card product-item" wx:for="{{list}}" wx:key="id"
+          bindtap="onProductTap" data-id="{{item.id}}" data-name="{{item.productName}}">
+      <view class="item-header">
+        <text class="item-name">{{item.productName}}</text>
+        <view class="item-actions" catchtap="noop">
+          <text class="action-link" catchtap="onManage" data-id="{{item.id}}" data-name="{{item.productName}}">管理</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+      <view class="item-info">
+        <text class="info-text">密钥: {{item.keyvalue}}</text>
+        <text class="info-text">MQTT用户: {{item.mqttUser}}</text>
+        <text class="info-text">注册模式: {{item.register === '1' ? '开启' : '关闭'}}</text>
+      </view>
+      <view class="item-footer">
+        <text class="nav-hint">点击查看设备 →</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd">
+    <text class="fab-text">+</text>
+  </view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加产品</text>
+      <view class="input-item">
+        <text class="input-label">产品名称</text>
+        <input class="input-field" placeholder="请输入产品名称" data-field="productName" bindinput="onFormInput" value="{{form.productName}}" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">密钥</text>
+        <input class="input-field" placeholder="请输入密钥" data-field="keyvalue" bindinput="onFormInput" value="{{form.keyvalue}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">注册模式</text>
+        <picker mode="selector" range="{{['关闭','开启']}}" bindchange="onRegisterChange">
+          <text class="picker-text">{{form.register === '1' ? '开启' : '关闭'}}</text>
+        </picker>
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.item-name { font-size: 28rpx; font-weight: 600; color: #333; flex: 1; }
+.item-actions { display: flex; gap: 20rpx; }
+.action-link { font-size: 26rpx; color: #1890ff; }
+.action-del { font-size: 26rpx; color: #ff4d4f; }
+.info-text { font-size: 24rpx; color: #666; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }

@@ -1,0 +1,28 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无事件，点击+添加" />
+  <view wx:else>
+    <view class="card event-item" wx:for="{{list}}" wx:key="id"
+          bindtap="onEventTap" data-id="{{item.id}}" data-name="{{item.eventName}}">
+      <view class="item-header">
+        <text class="item-name">{{item.eventName}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <text class="nav-hint">点击查看事件数据 →</text>
+    </view>
+  </view>
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加事件</text>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">事件名称</text>
+        <input class="input-field" placeholder="事件名称" data-field="eventName" bindinput="onFormInput" value="{{form.eventName}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

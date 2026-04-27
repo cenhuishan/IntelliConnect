@@ -1,0 +1,31 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无路由设置" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.routerName}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <text class="info-text">路由编号: {{item.routerNum}}</text>
+    </view>
+  </view>
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加路由设置</text>
+      <view class="input-item">
+        <text class="input-label">路由名称</text>
+        <input class="input-field" placeholder="路由名称" data-field="routerName" bindinput="onFormInput" value="{{form.routerName}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">路由编号</text>
+        <input class="input-field" placeholder="路由编号" data-field="routerNum" bindinput="onFormInput" value="{{form.routerNum}}" type="number" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

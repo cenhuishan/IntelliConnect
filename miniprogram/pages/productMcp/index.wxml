@@ -1,0 +1,27 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无MCP服务" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">MCP #{{item.id}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <text class="info-text">{{item.mcpUrl}}</text>
+    </view>
+  </view>
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加MCP服务</text>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">服务URL</text>
+        <input class="input-field" placeholder="MCP服务地址" data-field="mcpUrl" bindinput="onFormInput" value="{{form.mcpUrl}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

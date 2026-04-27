@@ -1,0 +1,10 @@
+.tab-bar { display: flex; padding: 0; margin-bottom: 20rpx; }
+.tab-item { flex: 1; text-align: center; padding: 20rpx 0; font-size: 28rpx; color: #999; border-bottom: 4rpx solid transparent; }
+.tab-item.active { color: #1890ff; border-bottom-color: #1890ff; font-weight: 600; }
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.item-name { font-size: 30rpx; font-weight: 600; color: #333; flex: 1; }
+.action-del { font-size: 26rpx; color: #ff4d4f; }
+.nav-hint { font-size: 24rpx; color: #1890ff; }
+.info-text { font-size: 24rpx; color: #666; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }
+.empty-tip { text-align: center; color: #999; font-size: 28rpx; padding: 80rpx 0; }

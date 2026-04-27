@@ -1,0 +1,12 @@
+.product-item { cursor: pointer; }
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.item-name { font-size: 32rpx; font-weight: 600; color: #333; }
+.item-actions { display: flex; gap: 20rpx; }
+.action-link { font-size: 26rpx; color: #1890ff; }
+.action-del { font-size: 26rpx; color: #ff4d4f; }
+.item-info { display: flex; flex-direction: column; gap: 8rpx; margin-bottom: 12rpx; }
+.info-text { font-size: 24rpx; color: #666; }
+.item-footer { border-top: 1rpx solid #f0f0f0; padding-top: 12rpx; }
+.nav-hint { font-size: 24rpx; color: #1890ff; }
+.picker-text { font-size: 28rpx; color: #333; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }

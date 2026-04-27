@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="card filter-card">
+    <view class="filter-row">
+      <text class="filter-label">选择产品</text>
+      <picker mode="selector" range="{{products}}" range-key="productName"
+              disabled="{{products.length === 0}}" bindchange="onProductChange">
+        <view class="picker-box">
+          <text class="picker-text">{{selectedProductId ? (products[selectedProductIdx] && products[selectedProductIdx].productName) || '已选择' : '请选择产品'}}</text>
+        </view>
+      </picker>
+    </view>
+    <view class="filter-row">
+      <text class="filter-label">选择设备</text>
+      <picker mode="selector" range="{{devices}}" range-key="deviceName"
+              disabled="{{devices.length === 0}}" bindchange="onDeviceChange">
+        <view class="picker-box">
+          <text class="picker-text">{{selectedDeviceName || '请先选择产品'}}</text>
+        </view>
+      </picker>
+    </view>
+    <button class="btn btn-primary query-btn" bindtap="onQuery" loading="{{querying}}">查询数据</button>
+  </view>
+
+  <view wx:if="{{deviceData.length > 0}}" class="card">
+    <text class="section-label">设备数据</text>
+    <view class="data-item" wx:for="{{deviceData}}" wx:key="key">
+      <text class="data-key">{{item.key}}</text>
+      <text class="data-value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <empty-view wx:elif="{{!querying && selectedDeviceName}}" text="暂无数据" />
+</view>

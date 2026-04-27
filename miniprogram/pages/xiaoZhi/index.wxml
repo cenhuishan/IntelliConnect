@@ -1,0 +1,34 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无小智设备" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.macAddress}}</text>
+        <view class="item-actions">
+          <text class="action-link" catchtap="onEdit" data-item="{{item}}">编辑</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+      <text class="info-text">当前版本: {{item.version}}</text>
+    </view>
+  </view>
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">{{editId ? '编辑设备' : '添加设备'}}</text>
+      <view class="input-item">
+        <text class="input-label">MAC地址</text>
+        <input class="input-field" placeholder="设备MAC地址" data-field="macAddress" bindinput="onFormInput" value="{{form.macAddress}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">当前版本</text>
+        <input class="input-field" placeholder="固件版本" data-field="version" bindinput="onFormInput" value="{{form.version}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

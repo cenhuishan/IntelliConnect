@@ -1,0 +1,31 @@
+{
+  "description": "IntelliConnect WeChat Mini Program",
+  "packOptions": { "ignore": [] },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "showShadowRootInWxmlPanel": true,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "babelSetting": { "ignore": [], "disablePlugins": [], "outputPath": "" },
+    "useIsolateContext": true,
+    "minifyWXSS": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.26.0",
+  "appid": "wx_placeholder",
+  "projectname": "IntelliConnect",
+  "debugOptions": { "hidedInDevtools": [] },
+  "scripts": {},
+  "staticServerOptions": { "baseURL": "", "servePath": "" },
+  "isGameTourist": false,
+  "condition": {}
+}

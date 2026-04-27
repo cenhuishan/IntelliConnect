@@ -1,0 +1,17 @@
+<view class="container">
+  <view class="upload-area card" bindtap="onUpload">
+    <text class="upload-icon">📤</text>
+    <text class="upload-text">点击上传固件文件</text>
+  </view>
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无固件" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.version || item.fileName || '固件'}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <text class="info-text">{{item.createTime || ''}}</text>
+    </view>
+  </view>
+</view>

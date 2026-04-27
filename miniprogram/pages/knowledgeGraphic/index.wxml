@@ -1,0 +1,86 @@
+<view class="container">
+  <view class="tab-bar card">
+    <view class="tab-item {{activeTab === idx ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="*this" wx:for-index="idx"
+          bindtap="onTabChange" data-idx="{{idx}}">{{item}}</view>
+  </view>
+
+  <view wx:if="{{activeTab === 0}}">
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <empty-view wx:elif="{{graphicList.length === 0}}" text="暂无知识图谱" />
+    <view wx:else>
+      <view class="card" wx:for="{{graphicList}}" wx:key="id"
+            bindtap="onSelectGraphic" data-id="{{item.id}}">
+        <view class="item-header">
+          <text class="item-name">{{item.graphicName}}</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="graphic">删除</text>
+        </view>
+        <text class="nav-hint">点击查看节点 →</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:elif="{{activeTab === 1}}">
+    <view wx:if="{{!selectedGraphicId}}" class="empty-tip">请先在图谱标签中选择一个图谱</view>
+    <empty-view wx:elif="{{nodeList.length === 0}}" text="暂无节点" />
+    <view wx:else>
+      <view class="card" wx:for="{{nodeList}}" wx:key="id"
+            bindtap="onSelectNode" data-id="{{item.id}}">
+        <view class="item-header">
+          <text class="item-name">{{item.nodeName}}</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="node">删除</text>
+        </view>
+        <text class="nav-hint">点击查看属性 →</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else>
+    <view wx:if="{{!selectedNodeId}}" class="empty-tip">请先在节点标签中选择一个节点</view>
+    <empty-view wx:elif="{{attrList.length === 0}}" text="暂无属性" />
+    <view wx:else>
+      <view class="card" wx:for="{{attrList}}" wx:key="id">
+        <view class="item-header">
+          <text class="item-name">{{item.attrKey}}</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="attr">删除</text>
+        </view>
+        <text class="info-text">{{item.attrValue}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">
+        {{modalType === 'graphic' ? '添加图谱' : (modalType === 'node' ? '添加节点' : '添加属性')}}
+      </text>
+      <view wx:if="{{modalType === 'graphic'}}">
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">图谱名称</text>
+          <input class="input-field" placeholder="图谱名称" data-field="graphicName" bindinput="onFormInput" />
+        </view>
+      </view>
+      <view wx:elif="{{modalType === 'node'}}">
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">节点名称</text>
+          <input class="input-field" placeholder="节点名称" data-field="nodeName" bindinput="onFormInput" />
+        </view>
+      </view>
+      <view wx:else>
+        <view class="input-item">
+          <text class="input-label">属性Key</text>
+          <input class="input-field" placeholder="属性Key" data-field="attrKey" bindinput="onFormInput" />
+        </view>
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">属性值</text>
+          <input class="input-field" placeholder="属性值" data-field="attrValue" bindinput="onFormInput" />
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

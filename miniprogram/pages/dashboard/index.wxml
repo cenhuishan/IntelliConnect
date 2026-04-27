@@ -1,0 +1,46 @@
+<view class="container">
+  <view class="welcome-card card">
+    <text class="welcome-title">欢迎使用 IntelliConnect</text>
+    <text class="welcome-sub">智能物联网平台</text>
+  </view>
+
+  <view class="stat-section card">
+    <text class="section-title-text">设备统计</text>
+    <view class="stat-grid">
+      <view class="stat-card">
+        <text class="stat-num">{{connectedData.num}}</text>
+        <text class="stat-label">设备总数</text>
+      </view>
+      <view class="stat-card online">
+        <text class="stat-num online-num">{{connectedData.connectedNum}}</text>
+        <text class="stat-label">在线设备</text>
+      </view>
+      <view class="stat-card offline">
+        <text class="stat-num offline-num">{{connectedData.disconnectedNum}}</text>
+        <text class="stat-label">离线设备</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="quick-actions card">
+    <text class="section-title-text">快捷入口</text>
+    <view class="action-grid">
+      <view class="action-item" bindtap="goProduct">
+        <text class="action-icon">📦</text>
+        <text class="action-text">产品管理</text>
+      </view>
+      <view class="action-item" bindtap="goMonitor">
+        <text class="action-icon">📊</text>
+        <text class="action-text">设备监控</text>
+      </view>
+      <view class="action-item" bindtap="goSchedule">
+        <text class="action-icon">⏰</text>
+        <text class="action-text">定时任务</text>
+      </view>
+      <view class="action-item" bindtap="goLlm">
+        <text class="action-icon">🤖</text>
+        <text class="action-text">LLM配置</text>
+      </view>
+    </view>
+  </view>
+</view>

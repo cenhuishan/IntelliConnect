@@ -1,0 +1,17 @@
+.section-title-text { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.server-row { display: flex; justify-content: space-between; align-items: center; }
+.server-url { font-size: 26rpx; color: #666; flex: 1; word-break: break-all; }
+.edit-btn { font-size: 26rpx; color: #1890ff; margin-left: 16rpx; flex-shrink: 0; }
+.edit-row { display: flex; flex-direction: column; gap: 16rpx; }
+.url-input { font-size: 26rpx; color: #333; border: 1rpx solid #d9d9d9; border-radius: 8rpx; padding: 12rpx 16rpx; }
+.edit-actions { display: flex; justify-content: flex-end; gap: 20rpx; }
+.cancel-btn { font-size: 26rpx; color: #999; }
+.save-btn { font-size: 26rpx; color: #1890ff; }
+.menu-list { }
+.menu-row { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.menu-row:last-child { border-bottom: none; }
+.menu-icon { font-size: 36rpx; margin-right: 16rpx; }
+.menu-title { flex: 1; font-size: 28rpx; color: #333; }
+.menu-arrow { font-size: 32rpx; color: #ccc; }
+.logout-card { text-align: center; }
+.logout-text { font-size: 30rpx; color: #ff4d4f; font-weight: 500; }
