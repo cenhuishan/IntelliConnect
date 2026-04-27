@@ -1,0 +1,58 @@
+<view class="container">
+  <!-- 统计卡片 -->
+  <view class="stat-row">
+    <view class="stat-card">
+      <text class="stat-num">{{num}}</text>
+      <text class="stat-label">设备总数</text>
+    </view>
+    <view class="stat-card" style="border-left:4rpx solid #52c41a;">
+      <text class="stat-num" style="color:#52c41a;">{{connected}}</text>
+      <text class="stat-label">在线设备</text>
+    </view>
+    <view class="stat-card" style="border-left:4rpx solid #ff4d4f;">
+      <text class="stat-num" style="color:#ff4d4f;">{{disconnected}}</text>
+      <text class="stat-label">离线设备</text>
+    </view>
+  </view>
+
+  <!-- 平台介绍 -->
+  <view class="card">
+    <view class="platform-header">
+      <text class="platform-title">创万联 IntelliConnect</text>
+      <text class="tag tag-blue">物联网平台</text>
+    </view>
+    <view class="tech-tags">
+      <text class="tag tag-blue" style="margin-right:12rpx;">SpringBoot</text>
+      <text class="tag tag-green" style="margin-right:12rpx;">Vue3</text>
+      <text class="tag tag-orange">Agent</text>
+    </view>
+    <text class="platform-desc">国内首个基于 Agent 设计的物联网平台，融合多模型 AI 能力、RAG 知识库、MCP 协议与完善的物模型抽象。</text>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="card">
+    <text class="page-title" style="margin-bottom:28rpx;display:block;">快捷入口</text>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goProduct">
+        <text class="menu-item-icon">📦</text>
+        <text class="menu-item-title">产品管理</text>
+        <text class="menu-item-desc">配置产品与物模型</text>
+      </view>
+      <view class="menu-item" bindtap="goDeviceMonitor">
+        <text class="menu-item-icon">📊</text>
+        <text class="menu-item-title">设备数据</text>
+        <text class="menu-item-desc">实时监控设备数据</text>
+      </view>
+      <view class="menu-item" bindtap="goPermission">
+        <text class="menu-item-icon">👥</text>
+        <text class="menu-item-title">系统管理</text>
+        <text class="menu-item-desc">用户与权限管理</text>
+      </view>
+      <view class="menu-item" bindtap="goAbout">
+        <text class="menu-item-icon">ℹ️</text>
+        <text class="menu-item-title">关于平台</text>
+        <text class="menu-item-desc">版本与帮助信息</text>
+      </view>
+    </view>
+  </view>
+</view>

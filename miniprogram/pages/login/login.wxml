@@ -1,0 +1,28 @@
+<view class="login-page">
+  <view class="login-header">
+    <text class="login-title">创万联</text>
+    <text class="login-subtitle">IntelliConnect 物联网平台</text>
+  </view>
+
+  <view class="login-form card">
+    <view class="form-item">
+      <text class="form-label">服务器地址</text>
+      <input class="form-input" value="{{baseUrl}}" bindinput="onBaseUrlInput" placeholder="http://localhost:8080" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">用户名</text>
+      <input class="form-input" value="{{username}}" bindinput="onUsernameInput" placeholder="请输入用户名" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">密码</text>
+      <input class="form-input" value="{{password}}" bindinput="onPasswordInput" placeholder="请输入密码" password />
+    </view>
+
+    <button class="btn-primary btn-block" loading="{{loading}}" bindtap="onLogin">登 录</button>
+
+    <view class="register-tip">
+      <text>还没有账号？</text>
+      <text class="link" bindtap="goRegister">立即注册</text>
+    </view>
+  </view>
+</view>

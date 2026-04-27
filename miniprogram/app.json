@@ -1,0 +1,75 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/dashboard/dashboard",
+    "pages/product/product",
+    "pages/productModel/productModel",
+    "pages/productData/productData",
+    "pages/productFunction/productFunction",
+    "pages/productDevice/productDevice",
+    "pages/productEvent/productEvent",
+    "pages/productEventData/productEventData",
+    "pages/productXiaoZhi/productXiaoZhi",
+    "pages/productRole/productRole",
+    "pages/agentMemory/agentMemory",
+    "pages/agentLongMemory/agentLongMemory",
+    "pages/productRouterSet/productRouterSet",
+    "pages/productKnowledge/productKnowledge",
+    "pages/productMcp/productMcp",
+    "pages/productSkills/productSkills",
+    "pages/productAsr/productAsr",
+    "pages/productOta/productOta",
+    "pages/productOtaXiaoZhi/productOtaXiaoZhi",
+    "pages/productOtaPassive/productOtaPassive",
+    "pages/alarmEvent/alarmEvent",
+    "pages/llmProvider/llmProvider",
+    "pages/productLlmModel/productLlmModel",
+    "pages/knowledgeGraphic/knowledgeGraphic",
+    "pages/timeSchedule/timeSchedule",
+    "pages/deviceMonitor/deviceMonitor",
+    "pages/permission/permission",
+    "pages/setting/setting",
+    "pages/about/about"
+  ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1890ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/dashboard/dashboard",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/product/product",
+        "text": "产品",
+        "iconPath": "assets/icons/product.png",
+        "selectedIconPath": "assets/icons/product-active.png"
+      },
+      {
+        "pagePath": "pages/deviceMonitor/deviceMonitor",
+        "text": "设备数据",
+        "iconPath": "assets/icons/device.png",
+        "selectedIconPath": "assets/icons/device-active.png"
+      },
+      {
+        "pagePath": "pages/setting/setting",
+        "text": "设置",
+        "iconPath": "assets/icons/setting.png",
+        "selectedIconPath": "assets/icons/setting-active.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1890ff",
+    "navigationBarTitleText": "创万联 IoT",
+    "navigationBarTextStyle": "white"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

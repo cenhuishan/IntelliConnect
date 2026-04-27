@@ -1,0 +1,169 @@
+<view class="container">
+  <!-- 产品列表 -->
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">产品列表</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建产品</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无产品数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.productName}}</text>
+        <text class="list-item-desc">ID: {{item.id}} · {{item.description}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+
+  <!-- 子功能入口 -->
+  <view class="card">
+    <text class="page-title" style="display:block;margin-bottom:24rpx;">物模型配置</text>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goProductModel">
+        <text class="menu-item-icon">🧩</text>
+        <text class="menu-item-title">配置物模型</text>
+        <text class="menu-item-desc">Thing Model 定义</text>
+      </view>
+      <view class="menu-item" bindtap="goProductData">
+        <text class="menu-item-icon">📋</text>
+        <text class="menu-item-title">配置属性</text>
+        <text class="menu-item-desc">设备属性定义</text>
+      </view>
+      <view class="menu-item" bindtap="goProductFunction">
+        <text class="menu-item-icon">⚙️</text>
+        <text class="menu-item-title">配置功能</text>
+        <text class="menu-item-desc">设备功能指令</text>
+      </view>
+      <view class="menu-item" bindtap="goProductDevice">
+        <text class="menu-item-icon">📡</text>
+        <text class="menu-item-title">配置设备</text>
+        <text class="menu-item-desc">设备注册管理</text>
+      </view>
+      <view class="menu-item" bindtap="goProductEvent">
+        <text class="menu-item-icon">🔔</text>
+        <text class="menu-item-title">配置事件</text>
+        <text class="menu-item-desc">设备事件定义</text>
+      </view>
+      <view class="menu-item" bindtap="goProductEventData">
+        <text class="menu-item-icon">📝</text>
+        <text class="menu-item-title">配置事件参数</text>
+        <text class="menu-item-desc">事件输出参数</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="page-title" style="display:block;margin-bottom:24rpx;">AI 配置</text>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goProductRole">
+        <text class="menu-item-icon">🎭</text>
+        <text class="menu-item-title">角色设置</text>
+        <text class="menu-item-desc">AI 角色人设</text>
+      </view>
+      <view class="menu-item" bindtap="goAgentMemory">
+        <text class="menu-item-icon">🧠</text>
+        <text class="menu-item-title">记忆体设置</text>
+        <text class="menu-item-desc">Agent 短期记忆</text>
+      </view>
+      <view class="menu-item" bindtap="goAgentLongMemory">
+        <text class="menu-item-icon">💾</text>
+        <text class="menu-item-title">长期记忆</text>
+        <text class="menu-item-desc">Agent 长期记忆</text>
+      </view>
+      <view class="menu-item" bindtap="goRouterSet">
+        <text class="menu-item-icon">🔀</text>
+        <text class="menu-item-title">语义路由</text>
+        <text class="menu-item-desc">意图路由配置</text>
+      </view>
+      <view class="menu-item" bindtap="goKnowledge">
+        <text class="menu-item-icon">📚</text>
+        <text class="menu-item-title">知识库</text>
+        <text class="menu-item-desc">RAG 知识库配置</text>
+      </view>
+      <view class="menu-item" bindtap="goMcp">
+        <text class="menu-item-icon">🔌</text>
+        <text class="menu-item-title">MCP 服务器</text>
+        <text class="menu-item-desc">MCP 协议接入</text>
+      </view>
+      <view class="menu-item" bindtap="goSkills">
+        <text class="menu-item-icon">🛠️</text>
+        <text class="menu-item-title">产品技能</text>
+        <text class="menu-item-desc">技能模块配置</text>
+      </view>
+      <view class="menu-item" bindtap="goAsr">
+        <text class="menu-item-icon">🎙️</text>
+        <text class="menu-item-title">ASR 语音识别</text>
+        <text class="menu-item-desc">语音识别配置</text>
+      </view>
+      <view class="menu-item" bindtap="goLlmProvider">
+        <text class="menu-item-icon">🤖</text>
+        <text class="menu-item-title">模型服务商</text>
+        <text class="menu-item-desc">LLM 供应商配置</text>
+      </view>
+      <view class="menu-item" bindtap="goProductLlmModel">
+        <text class="menu-item-icon">🧬</text>
+        <text class="menu-item-title">产品LLM模型</text>
+        <text class="menu-item-desc">产品模型绑定</text>
+      </view>
+      <view class="menu-item" bindtap="goKnowledgeGraphic">
+        <text class="menu-item-icon">🕸️</text>
+        <text class="menu-item-title">知识图谱</text>
+        <text class="menu-item-desc">图谱知识管理</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="page-title" style="display:block;margin-bottom:24rpx;">其他配置</text>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goProductXiaoZhi">
+        <text class="menu-item-icon">🤖</text>
+        <text class="menu-item-title">小智绑定</text>
+        <text class="menu-item-desc">小智设备绑定</text>
+      </view>
+      <view class="menu-item" bindtap="goOta">
+        <text class="menu-item-icon">⬆️</text>
+        <text class="menu-item-title">空中升级 OTA</text>
+        <text class="menu-item-desc">主动 OTA 升级</text>
+      </view>
+      <view class="menu-item" bindtap="goOtaXiaoZhi">
+        <text class="menu-item-icon">📲</text>
+        <text class="menu-item-title">小智 OTA</text>
+        <text class="menu-item-desc">小智设备升级</text>
+      </view>
+      <view class="menu-item" bindtap="goOtaPassive">
+        <text class="menu-item-icon">📦</text>
+        <text class="menu-item-title">被动 OTA 包</text>
+        <text class="menu-item-desc">被动升级固件包</text>
+      </view>
+      <view class="menu-item" bindtap="goAlarmEvent">
+        <text class="menu-item-icon">⚠️</text>
+        <text class="menu-item-title">事件告警</text>
+        <text class="menu-item-desc">告警规则配置</text>
+      </view>
+      <view class="menu-item" bindtap="goTimeSchedule">
+        <text class="menu-item-icon">⏰</text>
+        <text class="menu-item-title">定时任务</text>
+        <text class="menu-item-desc">Quartz 定时配置</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 新建产品弹层 -->
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <view class="modal-title">新建产品</view>
+  <view class="form-item">
+    <text class="form-label">产品名称 *</text>
+    <input class="form-input" value="{{form.productName}}" data-field="productName" bindinput="onFormInput" placeholder="请输入产品名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">产品描述</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入产品描述" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

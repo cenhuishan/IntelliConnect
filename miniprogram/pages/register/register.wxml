@@ -1,0 +1,17 @@
+<view class="container">
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">用户名</text>
+      <input class="form-input" value="{{username}}" bindinput="onUsernameInput" placeholder="请输入用户名" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">密码</text>
+      <input class="form-input" value="{{password}}" bindinput="onPasswordInput" placeholder="请输入密码" password />
+    </view>
+    <view class="form-item">
+      <text class="form-label">邮箱</text>
+      <input class="form-input" value="{{email}}" bindinput="onEmailInput" placeholder="请输入邮箱" />
+    </view>
+    <button class="btn-primary" style="width:100%;margin-top:16rpx;" loading="{{loading}}" bindtap="onRegister">注 册</button>
+  </view>
+</view>
