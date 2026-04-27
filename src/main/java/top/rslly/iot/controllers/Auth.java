@@ -490,4 +490,25 @@ public class Auth {
   public JsonResult<?> deleteAdminConfig(@RequestParam("id") int id) {
     return adminConfigService.deleteAdminConfig(id);
   }
+
+  @PreAuthorize("hasRole('ROLE_admin')")
+  @Operation(summary = "获取所有用户列表", description = "仅管理员可查看")
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  public JsonResult<?> getUsers() {
+    return ResultTool.success(userService.findAll());
+  }
+
+  @PreAuthorize("hasRole('ROLE_admin')")
+  @Operation(summary = "删除用户", description = "仅管理员可删除用户")
+  @RequestMapping(value = "/user", method = RequestMethod.DELETE)
+  public JsonResult<?> deleteUser(@RequestParam("id") int id) {
+    return userService.deleteUser(id);
+  }
+
+  @PreAuthorize("hasRole('ROLE_admin')")
+  @Operation(summary = "修改用户角色", description = "仅管理员可修改用户角色")
+  @RequestMapping(value = "/user/role", method = RequestMethod.PUT)
+  public JsonResult<?> updateUserRole(@Valid @RequestBody UserRoleParam userRoleParam) {
+    return userService.updateUserRole(userRoleParam.getId(), userRoleParam.getRole());
+  }
 }

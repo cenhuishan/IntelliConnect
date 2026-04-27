@@ -783,4 +783,14 @@ public class KnowledgeGraphicServiceImpl implements KnowledgeGraphicService {
         knowledgeGraphicAttributeRepository.findByBelong(belong);
     return ResultTool.success(attributes);
   }
+
+  @Override
+  public List<KnowledgeGraphicNodeEntity> findAllByProductId(int productId) {
+    return knowledgeGraphicNodeRepository.findAllByProductId(productId);
+  }
+
+  @Override
+  public List<KnowledgeGraphicNodeEntity> findAll() {
+    return knowledgeGraphicNodeRepository.findAll();
+  }
 }

@@ -7,8 +7,8 @@
     <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
     <view wx:for="{{list}}" wx:key="id" class="list-item">
       <view class="list-item-left">
-        <text class="list-item-title">{{item.subject}}</text>
-        <text class="list-item-desc" wx:if="{{'predicate'}}">PREDICATE：{{item.predicate}}</text>
+        <text class="list-item-title">{{item.name}}</text>
+        <text class="list-item-desc" wx:if="{{item.des}}">描述：{{item.des}}</text>
       </view>
       <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
     </view>
@@ -17,7 +17,7 @@
 
 <view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
 <view class="modal-box" wx:if="{{showAdd}}">
-  <text class="modal-title">新建知识图谱</text>
+  <text class="modal-title">新建知识图谱节点</text>
   <view class="form-item">
     <text class="form-label">关联产品 *</text>
     <picker mode="selector" range="{{productOptions}}" range-key="productName" bindchange="onProductChange">
@@ -25,16 +25,12 @@
     </picker>
   </view>
   <view class="form-item">
-    <text class="form-label">主语 *</text>
-    <input class="form-input" value="{{form.subject}}" data-field="subject" bindinput="onFormInput" placeholder="请输入主语" />
+    <text class="form-label">节点名称 *</text>
+    <input class="form-input" value="{{form.name}}" data-field="name" bindinput="onFormInput" placeholder="请输入节点名称" />
   </view>
   <view class="form-item">
-    <text class="form-label">谓语 *</text>
-    <input class="form-input" value="{{form.predicate}}" data-field="predicate" bindinput="onFormInput" placeholder="请输入谓语" />
-  </view>
-  <view class="form-item">
-    <text class="form-label">宾语 *</text>
-    <input class="form-input" value="{{form.object}}" data-field="object" bindinput="onFormInput" placeholder="请输入宾语" />
+    <text class="form-label">描述</text>
+    <input class="form-input" value="{{form.des}}" data-field="des" bindinput="onFormInput" placeholder="请输入描述" />
   </view>
   <view class="modal-footer">
     <button class="btn-cancel" bindtap="closeAdd">取消</button>

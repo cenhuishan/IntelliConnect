@@ -39,6 +39,8 @@ import top.rslly.iot.services.knowledgeGraphic.KnowledgeGraphicService;
 import top.rslly.iot.services.storage.DataServiceImpl;
 import top.rslly.iot.services.storage.EventStorageServiceImpl;
 import top.rslly.iot.services.thingsModel.ProductDeviceServiceImpl;
+import top.rslly.iot.models.KnowledgeGraphicNodeEntity;
+import top.rslly.iot.utility.JwtTokenUtil;
 import top.rslly.iot.utility.RuntimeMessage;
 import top.rslly.iot.utility.SseEmitterUtil;
 import top.rslly.iot.utility.result.JsonResult;
@@ -53,6 +55,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v2")
@@ -104,6 +107,10 @@ public class Tool {
   private TimeScheduleService timeScheduleService;
   @Autowired
   private ProductAsrServiceImpl productAsrService;
+  @Autowired
+  private UserServiceImpl userService;
+  @Autowired
+  private UserProductBindServiceImpl userProductBindService;
 
   @Operation(summary = "用于获取平台运行环境信息", description = "单位为百分比")
   @RequestMapping(value = "/machineMessage", method = RequestMethod.GET)
@@ -1197,5 +1204,56 @@ public class Tool {
       return ResultTool.fail(ResultCode.PARAM_NOT_VALID);
     }
     return timeScheduleService.deleteTimeSchedule(id);
+  }
+
+  @Operation(summary = "获取知识图谱节点列表", description = "获取当前用户所有产品的知识图谱节点")
+  @RequestMapping(value = "/knowledgeGraphic", method = RequestMethod.GET)
+  public JsonResult<?> getKnowledgeGraphicNodes(@RequestHeader("Authorization") String header) {
+    String tokenDeal = header.replace(JwtTokenUtil.TOKEN_PREFIX, "");
+    String role = JwtTokenUtil.getUserRole(tokenDeal);
+    String username = JwtTokenUtil.getUsername(tokenDeal);
+    List<KnowledgeGraphicNodeEntity> result = new ArrayList<>();
+    if (role.equals("[ROLE_admin]")) {
+      return ResultTool.success(knowledgeGraphicService.findAll());
+    }
+    var userList = userService.findAllByUsername(username);
+    if (userList.isEmpty()) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int userId = userList.get(0).getId();
+    var bindList = userProductBindService.findAllByUserId(userId);
+    for (var bind : bindList) {
+      result.addAll(knowledgeGraphicService.findAllByProductId(bind.getProductId()));
+    }
+    return ResultTool.success(result);
+  }
+
+  @Operation(summary = "添加知识图谱节点", description = "向指定产品添加知识图谱节点")
+  @RequestMapping(value = "/knowledgeGraphic", method = RequestMethod.POST)
+  public JsonResult<?> postKnowledgeGraphicNode(@Valid @RequestBody KnowledgeGraphicNode node,
+      @RequestHeader("Authorization") String header) {
+    try {
+      if (!safetyService.controlAuthorizeProduct(header, node.productId))
+        return ResultTool.fail(ResultCode.NO_PERMISSION);
+    } catch (NullPointerException e) {
+      return ResultTool.fail(ResultCode.PARAM_NOT_VALID);
+    }
+    return knowledgeGraphicService.addNode(node);
+  }
+
+  @Operation(summary = "删除知识图谱节点", description = "根据ID删除知识图谱节点")
+  @RequestMapping(value = "/knowledgeGraphic", method = RequestMethod.DELETE)
+  public JsonResult<?> deleteKnowledgeGraphicNode(@RequestParam("id") long id,
+      @RequestHeader("Authorization") String header) {
+    try {
+      KnowledgeGraphicNodeEntity node = knowledgeGraphicService.getNodeById(id);
+      if (node == null)
+        return ResultTool.fail(ResultCode.PARAM_NOT_VALID);
+      if (!safetyService.controlAuthorizeProduct(header, node.getProductId()))
+        return ResultTool.fail(ResultCode.NO_PERMISSION);
+    } catch (NullPointerException e) {
+      return ResultTool.fail(ResultCode.PARAM_NOT_VALID);
+    }
+    return knowledgeGraphicService.deleteNode(id);
   }
 }

@@ -17,32 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package top.rslly.iot.services;
+package top.rslly.iot.param.request;
 
+import lombok.Data;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import top.rslly.iot.models.UserEntity;
-import top.rslly.iot.param.request.User;
-import top.rslly.iot.utility.result.JsonResult;
-
-import java.util.List;
-
-public interface UserService {
-  List<UserEntity> findAllByUsername(String username);
-
-  List<UserEntity> findAllByEmail(String email);
-
-  List<UserEntity> findAll();
-
-  UserEntity insert(UserEntity userEntity);
-
-  JsonResult<?> newUser(User user);
-
-  JsonResult<?> forgotPassword(User user);
-
-  JsonResult<?> getUserCode(String username, String email);
-
-  JsonResult<?> deleteUser(int id);
-
-  JsonResult<?> updateUserRole(int id, String role);
+@Data
+public class UserRoleParam {
+  @NotNull(message = "id 不能为空")
+  private Integer id;
+  @NotBlank(message = "role 不能为空")
+  @Size(min = 1, max = 50, message = "role 长度必须在 1 到 50 之间")
+  private String role;
 }

@@ -121,4 +121,8 @@ public interface KnowledgeGraphicService {
   JsonResult<?> updateAttribute(String oldName, String newName, long belong);
 
   JsonResult<?> getAttributes(long belong);
+
+  List<KnowledgeGraphicNodeEntity> findAllByProductId(int productId);
+
+  List<KnowledgeGraphicNodeEntity> findAll();
 }

@@ -133,4 +133,28 @@ public class UserServiceImpl implements UserService {
     redisUtil.set(username + map.get("code"), email, 60 * 5);
     return ResultTool.success();
   }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public JsonResult<?> deleteUser(int id) {
+    List<UserEntity> users = userRepository.findAllById(id);
+    if (users.isEmpty()) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    userRepository.deleteById((long) id);
+    return ResultTool.success();
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public JsonResult<?> updateUserRole(int id, String role) {
+    List<UserEntity> users = userRepository.findAllById(id);
+    if (users.isEmpty()) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    UserEntity userEntity = users.get(0);
+    userEntity.setRole(role);
+    userRepository.save(userEntity);
+    return ResultTool.success();
+  }
 }
