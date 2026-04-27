@@ -117,25 +117,3 @@ Page({
     finally { hideLoading(); }
   }
 });
-      if (res && res.errorCode === 200) {
-        showToast('添加成功');
-        this.setData({ showModal: false });
-        this.loadList();
-      } else { showToast(res && res.message ? res.message : '添加失败'); }
-    } catch (e) { showToast('操作失败'); }
-    finally { hideLoading(); }
-  },
-
-  async onDelete(e) {
-    const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除该属性吗？');
-    if (!ok) return;
-    showLoading();
-    try {
-      const res = await deleteData(id);
-      if (res && res.errorCode === 200) { showToast('删除成功'); this.loadList(); }
-      else { showToast('删除失败'); }
-    } catch (e) { showToast('操作失败'); }
-    finally { hideLoading(); }
-  }
-});
