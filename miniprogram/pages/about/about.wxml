@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="card" style="text-align:center;padding:60rpx 40rpx;">
+    <text style="font-size:80rpx;display:block;margin-bottom:20rpx;">🔗</text>
+    <text style="font-size:40rpx;font-weight:bold;color:#333;display:block;">创万联 IntelliConnect</text>
+    <text style="font-size:26rpx;color:#999;display:block;margin-top:12rpx;">物联网 AI 智能体平台</text>
+  </view>
+
+  <view class="card">
+    <view class="list-item">
+      <text class="list-item-title">版本</text>
+      <text style="color:#999;">v1.8</text>
+    </view>
+    <view class="list-item">
+      <text class="list-item-title">后端框架</text>
+      <text style="color:#999;">Spring Boot 3.5.7 / Java 21</text>
+    </view>
+    <view class="list-item">
+      <text class="list-item-title">AI 框架</text>
+      <text style="color:#999;">LangChain4j</text>
+    </view>
+    <view class="list-item">
+      <text class="list-item-title">MQTT</text>
+      <text style="color:#999;">EMQX 5.8</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="list-item">
+      <text class="list-item-title">GitHub</text>
+      <text style="color:#1890ff;">github.com/ruanrongman/IntelliConnect</text>
+    </view>
+    <view class="list-item">
+      <text class="list-item-title">技术博客</text>
+      <text style="color:#1890ff;">wordpress.rslly.top</text>
+    </view>
+    <view class="list-item">
+      <text class="list-item-title">开源协议</text>
+      <text style="color:#999;">Apache 2.0（个人）/ 商业需授权</text>
+    </view>
+  </view>
+</view>

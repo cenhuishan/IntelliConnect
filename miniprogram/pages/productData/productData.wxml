@@ -1,0 +1,67 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">配置属性</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.jsonKey}}</text>
+        <text class="list-item-desc" wx:if="{{'description'}}">DESCRIPTION：{{item.description}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建配置属性</text>
+  <view class="form-item">
+    <text class="form-label">属性名称 *</text>
+    <input class="form-input" value="{{form.jsonKey}}" data-field="jsonKey" bindinput="onFormInput" placeholder="请输入属性名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">物模型 *</text>
+    <picker mode="selector" range="{{modelOptions}}" range-key="label" bindchange="onModelChange">
+      <view class="form-picker">{{form.modelId ? '已选物模型 ' + form.modelId : '请选择物模型'}}</view>
+    </picker>
+  </view>
+  <view class="form-item">
+    <text class="form-label">功能描述 *</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入功能描述" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">读写设置(0只读/1读写) *</text>
+    <input class="form-input" value="{{form.rrw}}" data-field="rrw" bindinput="onFormInput" placeholder="请输入读写设置(0只读/1读写)" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">存储类型(permanent/week/never) *</text>
+    <input class="form-input" value="{{form.storageType}}" data-field="storageType" bindinput="onFormInput" placeholder="请输入存储类型(permanent/week/never)" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">数据类型(string/int/float) *</text>
+    <input class="form-input" value="{{form.type}}" data-field="type" bindinput="onFormInput" placeholder="请输入数据类型(string/int/float)" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">最大值</text>
+    <input class="form-input" value="{{form.max}}" data-field="max" bindinput="onFormInput" placeholder="请输入最大值" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">最小值</text>
+    <input class="form-input" value="{{form.min}}" data-field="min" bindinput="onFormInput" placeholder="请输入最小值" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">步长</text>
+    <input class="form-input" value="{{form.step}}" data-field="step" bindinput="onFormInput" placeholder="请输入步长" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">单位</text>
+    <input class="form-input" value="{{form.unit}}" data-field="unit" bindinput="onFormInput" placeholder="请输入单位" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

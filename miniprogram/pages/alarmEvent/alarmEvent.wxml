@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">配置事件告警</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.alarmName}}</text>
+        <text class="list-item-desc" wx:if="{{'condition'}}">CONDITION：{{item.condition}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建配置事件告警</text>
+  <view class="form-item">
+    <text class="form-label">关联产品 *</text>
+    <picker mode="selector" range="{{productOptions}}" range-key="productName" bindchange="onProductChange">
+      <view class="form-picker">{{form.productId ? '已选产品 ' + form.productId : '请选择产品'}}</view>
+    </picker>
+  </view>
+  <view class="form-item">
+    <text class="form-label">告警名称 *</text>
+    <input class="form-input" value="{{form.alarmName}}" data-field="alarmName" bindinput="onFormInput" placeholder="请输入告警名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">触发条件 *</text>
+    <input class="form-input" value="{{form.condition}}" data-field="condition" bindinput="onFormInput" placeholder="请输入触发条件" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">描述</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入描述" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

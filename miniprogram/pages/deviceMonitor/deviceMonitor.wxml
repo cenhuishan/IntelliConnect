@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 选择产品 -->
+  <view class="card">
+    <view class="form-item">
+      <text class="form-label">选择产品</text>
+      <picker mode="selector" range="{{productList}}" range-key="productName" bindchange="onProductChange">
+        <view class="form-picker">{{selectedProductId ? '产品 ' + selectedProductId : '请选择产品'}}</view>
+      </picker>
+    </view>
+    <view class="form-item" wx:if="{{deviceList.length > 0}}">
+      <text class="form-label">选择设备</text>
+      <picker mode="selector" range="{{deviceList}}" range-key="deviceName" bindchange="onDeviceChange">
+        <view class="form-picker">{{selectedDeviceName || '请选择设备'}}</view>
+      </picker>
+    </view>
+    <view wx:if="{{selectedProductId && deviceList.length === 0}}" class="empty" style="padding:20rpx 0;">该产品暂无设备</view>
+  </view>
+
+  <!-- 数据 Tab -->
+  <view wx:if="{{selectedDeviceName}}" class="card">
+    <view class="tab-bar">
+      <view class="tab-item {{selectedTab === 'prop' ? 'active' : ''}}" data-tab="prop" bindtap="onTabChange">属性数据</view>
+      <view class="tab-item {{selectedTab === 'event' ? 'active' : ''}}" data-tab="event" bindtap="onTabChange">事件数据</view>
+    </view>
+
+    <!-- 属性 -->
+    <view wx:if="{{selectedTab === 'prop'}}">
+      <view wx:if="{{propData.length === 0}}" class="empty">暂无属性数据</view>
+      <view wx:for="{{propData}}" wx:key="index" class="list-item">
+        <view class="list-item-left">
+          <text class="list-item-title">{{item.jsonKey || item.key}}</text>
+          <text class="list-item-desc">{{item.time || item.timestamp}}</text>
+        </view>
+        <text class="tag tag-blue">{{item.value}}</text>
+      </view>
+    </view>
+
+    <!-- 事件 -->
+    <view wx:if="{{selectedTab === 'event'}}">
+      <view wx:if="{{eventData.length === 0}}" class="empty">暂无事件数据</view>
+      <view wx:for="{{eventData}}" wx:key="index" class="list-item">
+        <view class="list-item-left">
+          <text class="list-item-title">{{item.eventName || item.event}}</text>
+          <text class="list-item-desc">{{item.time || item.timestamp}}</text>
+        </view>
+        <text class="tag tag-orange">{{item.value || item.data}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!selectedDeviceName}}" class="card">
+    <view class="empty">请先选择产品和设备</view>
+  </view>
+</view>

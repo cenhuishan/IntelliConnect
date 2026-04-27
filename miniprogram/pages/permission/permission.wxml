@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">用户管理</text>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无用户数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.username}}</text>
+        <text class="list-item-desc">角色: {{item.roles || item.role}} · ID: {{item.id}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">配置事件</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.eventName}}</text>
+        <text class="list-item-desc" wx:if="{{'description'}}">DESCRIPTION：{{item.description}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建配置事件</text>
+  <view class="form-item">
+    <text class="form-label">事件名称 *</text>
+    <input class="form-input" value="{{form.eventName}}" data-field="eventName" bindinput="onFormInput" placeholder="请输入事件名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">物模型 *</text>
+    <picker mode="selector" range="{{modelOptions}}" range-key="label" bindchange="onModelChange">
+      <view class="form-picker">{{form.modelId ? '已选物模型 ' + form.modelId : '请选择物模型'}}</view>
+    </picker>
+  </view>
+  <view class="form-item">
+    <text class="form-label">事件描述 *</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入事件描述" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">事件类型(info/warn/error) *</text>
+    <input class="form-input" value="{{form.type}}" data-field="type" bindinput="onFormInput" placeholder="请输入事件类型(info/warn/error)" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

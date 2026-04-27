@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="card">
+    <text class="page-title" style="display:block;margin-bottom:28rpx;">服务器配置</text>
+    <view class="form-item">
+      <text class="form-label">服务器地址</text>
+      <input class="form-input" value="{{baseUrl}}" bindinput="onBaseUrlInput" placeholder="http://localhost:8080" />
+    </view>
+    <button class="btn-primary" bindtap="saveBaseUrl">保存</button>
+  </view>
+
+  <view class="card">
+    <text class="page-title" style="display:block;margin-bottom:28rpx;">管理功能</text>
+    <view class="list-item" bindtap="goPermission" style="cursor:pointer;">
+      <view class="list-item-left">
+        <text class="list-item-title">系统管理</text>
+        <text class="list-item-desc">用户与权限管理</text>
+      </view>
+      <text style="color:#999;">›</text>
+    </view>
+    <view class="list-item" bindtap="goAbout">
+      <view class="list-item-left">
+        <text class="list-item-title">关于</text>
+        <text class="list-item-desc">版本信息与帮助</text>
+      </view>
+      <text style="color:#999;">›</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <button style="width:100%;background:#ff4d4f;color:#fff;border-radius:8rpx;border:none;padding:24rpx;font-size:30rpx;" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

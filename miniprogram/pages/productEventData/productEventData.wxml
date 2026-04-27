@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">配置事件参数</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.jsonKey}}</text>
+        <text class="list-item-desc" wx:if="{{'description'}}">DESCRIPTION：{{item.description}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建配置事件参数</text>
+  <view class="form-item">
+    <text class="form-label">参数名称 *</text>
+    <input class="form-input" value="{{form.jsonKey}}" data-field="jsonKey" bindinput="onFormInput" placeholder="请输入参数名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">事件ID *</text>
+    <input class="form-input" value="{{form.eventId}}" data-field="eventId" bindinput="onFormInput" placeholder="请输入事件ID" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">参数描述 *</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入参数描述" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">数据类型(string/int/float) *</text>
+    <input class="form-input" value="{{form.type}}" data-field="type" bindinput="onFormInput" placeholder="请输入数据类型(string/int/float)" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

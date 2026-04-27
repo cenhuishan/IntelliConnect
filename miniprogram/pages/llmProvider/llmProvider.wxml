@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">模型服务商配置</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.providerName}}</text>
+        <text class="list-item-desc" wx:if="{{'baseUrl'}}">BASEURL：{{item.baseUrl}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建模型服务商配置</text>
+  <view class="form-item">
+    <text class="form-label">服务商名称 *</text>
+    <input class="form-input" value="{{form.providerName}}" data-field="providerName" bindinput="onFormInput" placeholder="请输入服务商名称" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">API Key *</text>
+    <input class="form-input" value="{{form.apiKey}}" data-field="apiKey" bindinput="onFormInput" placeholder="请输入API Key" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">Base URL *</text>
+    <input class="form-input" value="{{form.baseUrl}}" data-field="baseUrl" bindinput="onFormInput" placeholder="请输入Base URL" />
+  </view>
+  <view class="form-item">
+    <text class="form-label">描述</text>
+    <input class="form-input" value="{{form.description}}" data-field="description" bindinput="onFormInput" placeholder="请输入描述" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>

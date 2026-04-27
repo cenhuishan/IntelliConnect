@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="card">
+    <view class="page-header">
+      <text class="page-title">记忆体设置</text>
+      <button class="btn-primary" bindtap="openAdd">+ 新建</button>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">暂无数据</view>
+    <view wx:for="{{list}}" wx:key="id" class="list-item">
+      <view class="list-item-left">
+        <text class="list-item-title">{{item.productId}}</text>
+        <text class="list-item-desc" wx:if="{{'memoryContent'}}">MEMORYCONTENT：{{item.memoryContent}}</text>
+      </view>
+      <button class="btn-danger" data-id="{{item.id}}" bindtap="onDelete">删除</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd"></view>
+<view class="modal-box" wx:if="{{showAdd}}">
+  <text class="modal-title">新建记忆体设置</text>
+  <view class="form-item">
+    <text class="form-label">关联产品 *</text>
+    <picker mode="selector" range="{{productOptions}}" range-key="productName" bindchange="onProductChange">
+      <view class="form-picker">{{form.productId ? '已选产品 ' + form.productId : '请选择产品'}}</view>
+    </picker>
+  </view>
+  <view class="form-item">
+    <text class="form-label">记忆内容 *</text>
+    <input class="form-input" value="{{form.memoryContent}}" data-field="memoryContent" bindinput="onFormInput" placeholder="请输入记忆内容" />
+  </view>
+  <view class="modal-footer">
+    <button class="btn-cancel" bindtap="closeAdd">取消</button>
+    <button class="btn-primary" bindtap="onSubmit">提交</button>
+  </view>
+</view>
