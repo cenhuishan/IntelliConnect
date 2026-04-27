@@ -1,32 +1,49 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无供应商配置" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无LLM供应商，点击+添加" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
         <text class="item-name">{{item.providerName}}</text>
         <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
       </view>
-      <text class="info-text">API Key: {{item.apiKey ? '******' : '未设置'}}</text>
-      <text class="info-text" wx:if="{{item.baseUrl}}">Base URL: {{item.baseUrl}}</text>
+      <view class="item-info">
+        <text class="info-text">类型: {{item.type}}</text>
+        <text class="info-text" wx:if="{{item.userName}}">用户: {{item.userName}}</text>
+        <text class="info-text">地址: {{item.baseUrl}}</text>
+      </view>
     </view>
   </view>
+
   <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
       <text class="modal-title">添加LLM供应商</text>
-      <view class="input-item">
-        <text class="input-label">供应商名称</text>
-        <input class="input-field" placeholder="如: dashscope-qwen" data-field="providerName" bindinput="onFormInput" value="{{form.providerName}}" />
-      </view>
-      <view class="input-item">
-        <text class="input-label">API Key</text>
-        <input class="input-field" placeholder="API密钥" data-field="apiKey" bindinput="onFormInput" value="{{form.apiKey}}" />
-      </view>
-      <view class="input-item" style="border-bottom:none">
-        <text class="input-label">Base URL</text>
-        <input class="input-field" placeholder="可选，自定义接口地址" data-field="baseUrl" bindinput="onFormInput" value="{{form.baseUrl}}" />
-      </view>
+      <scroll-view scroll-y style="max-height:65vh">
+        <view class="input-item">
+          <text class="input-label">供应商名称</text>
+          <input class="input-field" placeholder="名称" data-field="providerName" bindinput="onFormInput" value="{{form.providerName}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">类型</text>
+          <picker mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+            <text class="picker-text">{{form.type}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">Base URL</text>
+          <input class="input-field" placeholder="https://..." data-field="baseUrl" bindinput="onFormInput" value="{{form.baseUrl}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">API Key</text>
+          <input class="input-field" placeholder="API Key" data-field="appKey" bindinput="onFormInput" value="{{form.appKey}}" password />
+        </view>
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">用户名</text>
+          <input class="input-field" placeholder="用户名（可选）" data-field="userName" bindinput="onFormInput" value="{{form.userName}}" />
+        </view>
+      </scroll-view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>
         <button class="btn btn-primary" bindtap="onSubmit">确认</button>

@@ -8,15 +8,17 @@ Page({
     list: [],
     loading: false,
     showModal: false,
-    form: { deviceName: '', productId: '' }
+    form: { name: '', password: '', description: '', subscribeTopic: '', allow: true, modelId: '', productId: '' }
   },
 
   onLoad(options) {
     const { productId, productName } = options;
     this.setData({ productId, productName: decodeURIComponent(productName || '') });
-    wx.setNavigationBarTitle({ title: decodeURIComponent(productName || '') + ' - 设备' });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(productName || '') + ' - 设备管理' });
     this.loadList();
   },
+
+  onShow() { this.loadList(); },
 
   async loadList() {
     this.setData({ loading: true });
@@ -30,7 +32,10 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { deviceName: '', productId: this.data.productId } });
+    this.setData({
+      showModal: true,
+      form: { name: '', password: '', description: '', subscribeTopic: '', allow: true, modelId: '', productId: this.data.productId }
+    });
   },
 
   onCloseModal() { this.setData({ showModal: false }); },
@@ -42,7 +47,7 @@ Page({
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.deviceName) { showToast('请输入设备名称'); return; }
+    if (!form.name) { showToast('请输入设备名称'); return; }
     showLoading();
     try {
       const res = await addDevice(form);

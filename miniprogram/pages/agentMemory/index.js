@@ -8,13 +8,17 @@ Page({
     loading: false,
     showModal: false,
     editItem: null,
-    form: { memory: '', productId: '' }
+    form: { content: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - Agent记忆' });
     this.loadList();
   },
+
+  onShow() { this.loadList(); },
 
   async loadList() {
     this.setData({ loading: true });
@@ -29,19 +33,19 @@ Page({
 
   onEdit(e) {
     const item = e.currentTarget.dataset.item;
-    this.setData({ showModal: true, editItem: item, form: { memory: item.memory, productId: this.data.productId } });
+    this.setData({ showModal: true, editItem: item, form: { content: item.content || '' } });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
-  onFormInput(e) {
-    this.setData({ 'form.memory': e.detail.value });
-  },
+
+  onFormInput(e) { this.setData({ 'form.content': e.detail.value }); },
 
   async onSubmit() {
     const { form, editItem } = this.data;
-    if (!form.memory) { showToast('请输入记忆内容'); return; }
+    if (!form.content) { showToast('请输入记忆内容'); return; }
     showLoading();
     try {
-      const res = await updateMemory({ ...form, id: editItem.id });
+      const res = await updateMemory({ content: form.content, id: editItem.id });
       if (res && res.errorCode === 200) {
         showToast('更新成功');
         this.setData({ showModal: false });

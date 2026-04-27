@@ -1,16 +1,33 @@
 const { getScheduleList, addSchedule, updateSchedule, deleteSchedule } = require('../../api/timeSchedule');
+const { getProductList } = require('../../api/product');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
 Page({
   data: {
     list: [],
+    products: [],
+    productNames: [],
     loading: false,
     showModal: false,
     editId: null,
-    form: { scheduleName: '', cron: '', content: '', enable: true }
+    execEnabled: false,
+    form: { taskName: '', cron: '', exec: false, execCommand: '', productId: '' }
   },
 
-  onShow() { this.loadList(); },
+  onShow() {
+    this.loadProducts();
+    this.loadList();
+  },
+
+  async loadProducts() {
+    try {
+      const res = await getProductList();
+      if (res && res.errorCode === 200) {
+        const products = Array.isArray(res.data) ? res.data : [];
+        this.setData({ products, productNames: products.map(p => p.productName || String(p.id)) });
+      }
+    } catch (e) {}
+  },
 
   async loadList() {
     this.setData({ loading: true });
@@ -24,27 +41,56 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, editId: null, form: { scheduleName: '', cron: '', content: '', enable: true } });
+    this.setData({
+      showModal: true,
+      editId: null,
+      execEnabled: false,
+      form: { taskName: '', cron: '', exec: false, execCommand: '', productId: this.data.products.length ? this.data.products[0].id : '' }
+    });
   },
+
   onEdit(e) {
     const item = e.currentTarget.dataset.item;
-    this.setData({ showModal: true, editId: item.id, form: { scheduleName: item.scheduleName, cron: item.cron, content: item.content, enable: item.enable } });
+    this.setData({
+      showModal: true,
+      editId: item.id,
+      execEnabled: !!item.exec,
+      form: {
+        taskName: item.taskName || '',
+        cron: item.cron || '',
+        exec: !!item.exec,
+        execCommand: item.execCommand || '',
+        productId: item.productId || ''
+      }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
   },
-  onEnableChange(e) {
-    this.setData({ 'form.enable': e.detail.value });
+
+  onExecChange(e) {
+    const val = e.detail.value;
+    this.setData({ execEnabled: val, 'form.exec': val });
+  },
+
+  onProductChange(e) {
+    const p = this.data.products[e.detail.value];
+    if (p) this.setData({ 'form.productId': p.id });
   },
 
   async onSubmit() {
     const { form, editId } = this.data;
-    if (!form.scheduleName || !form.cron) { showToast('请填写完整信息'); return; }
+    if (!form.taskName) { showToast('请输入任务名称'); return; }
+    if (!form.cron) { showToast('请输入 Cron 表达式'); return; }
     showLoading();
     try {
-      const res = editId ? await updateSchedule({ ...form, id: editId }) : await addSchedule(form);
+      const res = editId
+        ? await updateSchedule({ ...form, id: editId })
+        : await addSchedule(form);
       if (res && res.errorCode === 200) {
         showToast(editId ? '更新成功' : '添加成功');
         this.setData({ showModal: false });
@@ -56,7 +102,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除该任务吗？');
+    const ok = await showConfirm('确定删除该定时任务吗？');
     if (!ok) return;
     showLoading();
     try {

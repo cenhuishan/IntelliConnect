@@ -1,26 +1,44 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无被动升级配置" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无被动升级配置，点击+添加" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">{{item.deviceName}}</text>
+        <text class="item-name">{{item.deviceName || item.deviceId}}</text>
         <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
       </view>
-      <text class="info-text">版本: {{item.version}}</text>
+      <view class="item-info">
+        <text class="info-text">固件: {{item.otaName || item.otaId}}</text>
+        <text class="info-text">版本: {{item.versionName}}</text>
+        <text class="info-text" wx:if="{{item.description}}">描述: {{item.description}}</text>
+      </view>
     </view>
   </view>
+
   <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
       <text class="modal-title">添加被动升级</text>
       <view class="input-item">
-        <text class="input-label">设备名称</text>
-        <input class="input-field" placeholder="设备名称" data-field="deviceName" bindinput="onFormInput" value="{{form.deviceName}}" />
+        <text class="input-label">选择固件</text>
+        <picker mode="selector" range="{{otaNames}}" bindchange="onOtaChange">
+          <text class="picker-text">{{otaNames.length ? otaNames[0] : '暂无固件'}}</text>
+        </picker>
+      </view>
+      <view class="input-item">
+        <text class="input-label">选择设备</text>
+        <picker mode="selector" range="{{deviceNames}}" bindchange="onDeviceChange">
+          <text class="picker-text">{{deviceNames.length ? deviceNames[0] : '暂无设备'}}</text>
+        </picker>
+      </view>
+      <view class="input-item">
+        <text class="input-label">版本名称</text>
+        <input class="input-field" placeholder="版本名称" data-field="versionName" bindinput="onFormInput" value="{{form.versionName}}" />
       </view>
       <view class="input-item" style="border-bottom:none">
-        <text class="input-label">目标版本</text>
-        <input class="input-field" placeholder="固件版本" data-field="version" bindinput="onFormInput" value="{{form.version}}" />
+        <text class="input-label">描述</text>
+        <input class="input-field" placeholder="描述（可选）" data-field="description" bindinput="onFormInput" value="{{form.description}}" />
       </view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>

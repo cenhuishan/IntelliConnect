@@ -1,27 +1,30 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无记忆数据" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无Agent记忆" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">{{item.deviceName || item.openId || '记忆'}}</text>
+        <text class="item-name">{{item.deviceName || '未知设备'}}</text>
         <view class="item-actions">
           <text class="action-link" catchtap="onEdit" data-item="{{item}}">编辑</text>
           <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
         </view>
       </view>
-      <text class="memory-text">{{item.memory}}</text>
+      <text class="info-text">会话ID: {{item.chatId}}</text>
+      <text class="info-text desc-text">{{item.content}}</text>
     </view>
   </view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
       <text class="modal-title">编辑记忆</text>
       <view class="input-item" style="border-bottom:none">
-        <textarea class="textarea-field" placeholder="记忆内容" bindinput="onFormInput" value="{{form.memory}}" />
+        <text class="input-label">内容</text>
+        <textarea class="input-field textarea-field" placeholder="记忆内容" bindinput="onFormInput" value="{{form.content}}" />
       </view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>
-        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+        <button class="btn btn-primary" bindtap="onSubmit">保存</button>
       </view>
     </view>
   </view>

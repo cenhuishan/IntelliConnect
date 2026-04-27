@@ -1,16 +1,20 @@
 <view class="container">
   <view class="upload-area card" bindtap="onUpload">
     <text class="upload-icon">📤</text>
-    <text class="upload-text">点击上传技能文件</text>
+    <text class="upload-text">点击上传技能文件（.yaml/.json）</text>
   </view>
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
   <empty-view wx:elif="{{list.length === 0}}" text="暂无技能" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">{{item.skillName || item.fileName || '技能'}}</text>
-        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        <text class="item-name">{{item.name || item.filename || item.skillName || '技能'}}</text>
+        <view class="item-actions">
+          <view class="tag {{item.status === 'active' ? 'tag-success' : 'tag-default'}}" wx:if="{{item.status}}">{{item.status}}</view>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        </view>
       </view>
+      <text class="info-text" wx:if="{{item.description}}">{{item.description}}</text>
     </view>
   </view>
 </view>

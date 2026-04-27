@@ -1,4 +1,4 @@
-const { getMcpList, addMcp, deleteMcp } = require('../../api/productMcp');
+const { getMcpList, addMcp, deleteMcp, getMcpEndpoint, getMcpTools } = require('../../api/productMcp');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
 Page({
@@ -7,11 +7,16 @@ Page({
     list: [],
     loading: false,
     showModal: false,
-    form: { mcpUrl: '', productId: '' }
+    showEndpointModal: false,
+    endpointUrl: '',
+    tools: [],
+    form: { description: '', sseEndpoint: '', url: '', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - MCP服务' });
     this.loadList();
   },
 
@@ -26,10 +31,31 @@ Page({
     finally { this.setData({ loading: false }); }
   },
 
-  onAdd() {
-    this.setData({ showModal: true, form: { mcpUrl: '', productId: this.data.productId } });
+  async onShowEndpoint() {
+    showLoading();
+    try {
+      const [epRes, toolsRes] = await Promise.all([
+        getMcpEndpoint(this.data.productId),
+        getMcpTools(this.data.productId)
+      ]);
+      const url = (epRes && epRes.errorCode === 200) ? (epRes.data && epRes.data.url ? epRes.data.url : String(epRes.data)) : '暂无';
+      const tools = (toolsRes && toolsRes.errorCode === 200 && Array.isArray(toolsRes.data)) ? toolsRes.data : [];
+      this.setData({ showEndpointModal: true, endpointUrl: url, tools });
+    } catch (e) { showToast('获取失败'); }
+    finally { hideLoading(); }
   },
+
+  onCloseEndpoint() { this.setData({ showEndpointModal: false }); },
+
+  onAdd() {
+    this.setData({
+      showModal: true,
+      form: { description: '', sseEndpoint: '', url: '', productId: this.data.productId }
+    });
+  },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
@@ -37,7 +63,7 @@ Page({
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.mcpUrl) { showToast('请输入MCP服务URL'); return; }
+    if (!form.url && !form.sseEndpoint) { showToast('请输入服务URL或SSE端点'); return; }
     showLoading();
     try {
       const res = await addMcp(form);

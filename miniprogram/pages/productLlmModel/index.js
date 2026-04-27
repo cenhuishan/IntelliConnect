@@ -1,18 +1,37 @@
 const { getLlmModelList, addLlmModel, deleteLlmModel } = require('../../api/productLlmModel');
+const { getLlmProviderList } = require('../../api/llmProviderInformation');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
 Page({
   data: {
     productId: '',
     list: [],
+    providers: [],
+    providerNames: [],
     loading: false,
     showModal: false,
-    form: { modelName: '', llmType: '', productId: '' }
+    form: { modelName: '', providerId: '', toolsId: '', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - LLM模型' });
+    this.loadProviders();
     this.loadList();
+  },
+
+  async loadProviders() {
+    try {
+      const res = await getLlmProviderList();
+      if (res && res.errorCode === 200) {
+        const providers = Array.isArray(res.data) ? res.data : [];
+        this.setData({
+          providers,
+          providerNames: providers.map(p => (p.providerName || '') + (p.userName ? ` (${p.userName})` : '') || String(p.id))
+        });
+      }
+    } catch (e) {}
   },
 
   async loadList() {
@@ -27,17 +46,29 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { modelName: '', llmType: '', productId: this.data.productId } });
+    const { providers } = this.data;
+    this.setData({
+      showModal: true,
+      form: { modelName: '', providerId: providers.length ? providers[0].id : '', toolsId: '', productId: this.data.productId }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
   },
 
+  onProviderChange(e) {
+    const p = this.data.providers[e.detail.value];
+    if (p) this.setData({ 'form.providerId': p.id });
+  },
+
   async onSubmit() {
     const { form } = this.data;
     if (!form.modelName) { showToast('请输入模型名称'); return; }
+    if (!form.providerId) { showToast('请选择供应商'); return; }
     showLoading();
     try {
       const res = await addLlmModel(form);
@@ -52,7 +83,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除？');
+    const ok = await showConfirm('确定删除该模型配置吗？');
     if (!ok) return;
     showLoading();
     try {
@@ -61,5 +92,10 @@ Page({
       else { showToast('删除失败'); }
     } catch (e) { showToast('操作失败'); }
     finally { hideLoading(); }
+  },
+
+  getProviderName(providerId) {
+    const p = this.data.providers.find(p => String(p.id) === String(providerId));
+    return p ? (p.providerName || String(p.id)) : String(providerId);
   }
 });

@@ -1,15 +1,20 @@
-const { getKnowledgeList, deleteKnowledge, uploadKnowledge } = require('../../api/productKnowledge');
+const { getKnowledgeList, deleteKnowledge, uploadKnowledge, recallKnowledge } = require('../../api/productKnowledge');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
 Page({
   data: {
     productId: '',
     list: [],
-    loading: false
+    loading: false,
+    showRecallModal: false,
+    recallContent: '',
+    recallResult: ''
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - 知识库' });
     this.loadList();
   },
 
@@ -55,6 +60,30 @@ Page({
       const res = await deleteKnowledge(id);
       if (res && res.errorCode === 200) { showToast('删除成功'); this.loadList(); }
       else { showToast('删除失败'); }
+    } catch (e) { showToast('操作失败'); }
+    finally { hideLoading(); }
+  },
+
+  onShowRecall() {
+    this.setData({ showRecallModal: true, recallContent: '', recallResult: '' });
+  },
+
+  onCloseRecall() { this.setData({ showRecallModal: false }); },
+
+  onRecallInput(e) { this.setData({ recallContent: e.detail.value }); },
+
+  async onRecall() {
+    const { recallContent, productId } = this.data;
+    if (!recallContent) { showToast('请输入查询内容'); return; }
+    showLoading('召回中...');
+    try {
+      const res = await recallKnowledge({ content: recallContent, productId });
+      if (res && res.errorCode === 200) {
+        const result = typeof res.data === 'string' ? res.data : JSON.stringify(res.data, null, 2);
+        this.setData({ recallResult: result });
+      } else {
+        showToast('召回失败');
+      }
     } catch (e) { showToast('操作失败'); }
     finally { hideLoading(); }
   }

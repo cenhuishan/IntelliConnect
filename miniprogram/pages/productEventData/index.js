@@ -1,26 +1,30 @@
 const { getEventDataList, addEventData, deleteEventData } = require('../../api/productEventData');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
+const TYPE_OPTIONS = ['int', 'float', 'string', 'bool'];
+
 Page({
   data: {
     eventId: '',
     list: [],
     loading: false,
     showModal: false,
-    form: { jsonKey: '', dataName: '', dataType: 'int', eventId: '' }
+    typeOptions: TYPE_OPTIONS,
+    form: { jsonKey: '', description: '', type: 'int', modelId: '' }
   },
 
   onLoad(options) {
+    const eventId = options.eventId || '';
     const name = decodeURIComponent(options.eventName || '');
-    this.setData({ eventId: options.eventId || '' });
-    wx.setNavigationBarTitle({ title: name + ' - 数据' });
+    this.setData({ eventId });
+    wx.setNavigationBarTitle({ title: name + ' - 事件数据' });
     this.loadList();
   },
 
   async loadList() {
     this.setData({ loading: true });
     try {
-      const res = await getEventDataList({ eventId: this.data.eventId });
+      const res = await getEventDataList({ modelId: this.data.eventId });
       if (res && res.errorCode === 200) {
         this.setData({ list: Array.isArray(res.data) ? res.data : [] });
       }
@@ -29,21 +33,26 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { jsonKey: '', dataName: '', dataType: 'int', eventId: this.data.eventId } });
+    this.setData({
+      showModal: true,
+      form: { jsonKey: '', description: '', type: 'int', modelId: this.data.eventId }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
   },
+
   onTypeChange(e) {
-    const types = ['int', 'float', 'string', 'bool'];
-    this.setData({ 'form.dataType': types[e.detail.value] });
+    this.setData({ 'form.type': TYPE_OPTIONS[e.detail.value] });
   },
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.jsonKey || !form.dataName) { showToast('请填写完整信息'); return; }
+    if (!form.jsonKey) { showToast('请输入 JSON Key'); return; }
     showLoading();
     try {
       const res = await addEventData(form);

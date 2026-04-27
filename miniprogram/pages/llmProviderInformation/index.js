@@ -1,12 +1,15 @@
 const { getProviderList, addProvider, deleteProvider } = require('../../api/llmProviderInformation');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
+const TYPE_OPTIONS = ['openai', 'anthropic', 'dashscope', 'zhipuai', 'custom'];
+
 Page({
   data: {
     list: [],
     loading: false,
     showModal: false,
-    form: { providerName: '', apiKey: '', baseUrl: '' }
+    typeOptions: TYPE_OPTIONS,
+    form: { providerName: '', baseUrl: '', appKey: '', type: 'openai', userName: '' }
   },
 
   onShow() { this.loadList(); },
@@ -23,17 +26,21 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { providerName: '', apiKey: '', baseUrl: '' } });
+    this.setData({ showModal: true, form: { providerName: '', baseUrl: '', appKey: '', type: 'openai', userName: '' } });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
   },
 
+  onTypeChange(e) { this.setData({ 'form.type': TYPE_OPTIONS[e.detail.value] }); },
+
   async onSubmit() {
     const { form } = this.data;
-    if (!form.providerName || !form.apiKey) { showToast('请填写必要信息'); return; }
+    if (!form.providerName || !form.appKey) { showToast('请填写供应商名称和API Key'); return; }
     showLoading();
     try {
       const res = await addProvider(form);

@@ -1,38 +1,51 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无定时任务" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无定时任务，点击+添加" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">{{item.scheduleName}}</text>
+        <text class="item-name">{{item.taskName}}</text>
         <view class="item-actions">
           <text class="action-link" catchtap="onEdit" data-item="{{item}}">编辑</text>
           <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
         </view>
       </view>
-      <text class="info-text">Cron: {{item.cron}}</text>
-      <text class="info-text" wx:if="{{item.content}}">内容: {{item.content}}</text>
-      <view class="tag {{item.enable ? 'tag-success' : 'tag-default'}}" style="margin-top:8rpx">
-        {{item.enable ? '启用' : '禁用'}}
+      <view class="item-info">
+        <text class="info-text">Cron: {{item.cron}}</text>
+        <text class="info-text">执行命令: {{item.exec ? item.execCommand : '无'}}</text>
       </view>
     </view>
   </view>
+
   <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
-      <text class="modal-title">{{editId ? '编辑任务' : '添加任务'}}</text>
-      <view class="input-item">
-        <text class="input-label">任务名称</text>
-        <input class="input-field" placeholder="任务名称" data-field="scheduleName" bindinput="onFormInput" value="{{form.scheduleName}}" />
-      </view>
-      <view class="input-item">
-        <text class="input-label">Cron表达式</text>
-        <input class="input-field" placeholder="如: 0 0 8 * * ?" data-field="cron" bindinput="onFormInput" value="{{form.cron}}" />
-      </view>
-      <view class="input-item" style="border-bottom:none">
-        <text class="input-label">任务内容</text>
-        <input class="input-field" placeholder="任务内容" data-field="content" bindinput="onFormInput" value="{{form.content}}" />
-      </view>
+      <text class="modal-title">{{editId ? '编辑任务' : '添加定时任务'}}</text>
+      <scroll-view scroll-y style="max-height:65vh">
+        <view class="input-item">
+          <text class="input-label">任务名称</text>
+          <input class="input-field" placeholder="任务名称" data-field="taskName" bindinput="onFormInput" value="{{form.taskName}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">Cron</text>
+          <input class="input-field" placeholder="如: 0 0 * * * ?" data-field="cron" bindinput="onFormInput" value="{{form.cron}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">产品</text>
+          <picker mode="selector" range="{{productNames}}" bindchange="onProductChange">
+            <text class="picker-text">{{productNames.length ? productNames[0] : '选择产品'}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">执行命令</text>
+          <switch checked="{{execEnabled}}" bindchange="onExecChange" />
+        </view>
+        <view class="input-item" wx:if="{{execEnabled}}" style="border-bottom:none">
+          <text class="input-label">命令内容</text>
+          <input class="input-field" placeholder="执行命令" data-field="execCommand" bindinput="onFormInput" value="{{form.execCommand}}" />
+        </view>
+      </scroll-view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>
         <button class="btn btn-primary" bindtap="onSubmit">确认</button>

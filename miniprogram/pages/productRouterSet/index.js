@@ -7,11 +7,13 @@ Page({
     list: [],
     loading: false,
     showModal: false,
-    form: { routerName: '', routerNum: '', productId: '' }
+    form: { prompt: '', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - 路由设置' });
     this.loadList();
   },
 
@@ -27,9 +29,11 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { routerName: '', routerNum: '', productId: this.data.productId } });
+    this.setData({ showModal: true, form: { prompt: '', productId: this.data.productId } });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
@@ -37,7 +41,7 @@ Page({
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.routerName) { showToast('请输入路由名称'); return; }
+    if (!form.prompt) { showToast('请输入路由Prompt'); return; }
     showLoading();
     try {
       const res = await addRouterSet(form);
@@ -52,7 +56,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除？');
+    const ok = await showConfirm('确定删除该路由设置吗？');
     if (!ok) return;
     showLoading();
     try {

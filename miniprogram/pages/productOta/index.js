@@ -5,11 +5,16 @@ Page({
   data: {
     productId: '',
     list: [],
-    loading: false
+    loading: false,
+    showNameModal: false,
+    pendingFilePath: '',
+    uploadName: ''
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - OTA升级' });
     this.loadList();
   },
 
@@ -30,20 +35,44 @@ Page({
       type: 'file',
       success: (res) => {
         const file = res.tempFiles[0];
-        showLoading('上传中...');
-        uploadOta(file.path, { productId: this.data.productId })
-          .then(data => {
-            if (data && data.errorCode === 200) {
-              showToast('上传成功');
-              this.loadList();
-            } else {
-              showToast(data && data.message ? data.message : '上传失败');
-            }
-          })
-          .catch(() => showToast('上传失败'))
-          .finally(() => hideLoading());
+        // Ask for firmware name before uploading
+        this.setData({ pendingFilePath: file.path, showNameModal: true, uploadName: file.name || '' });
+      },
+      fail: () => {
+        // Try media file fallback
+        wx.chooseMedia({
+          count: 1,
+          success: (res2) => {
+            const file = res2.tempFiles[0];
+            this.setData({ pendingFilePath: file.tempFilePath, showNameModal: true, uploadName: '' });
+          }
+        });
       }
     });
+  },
+
+  onNameInput(e) { this.setData({ uploadName: e.detail.value }); },
+
+  onCancelUpload() { this.setData({ showNameModal: false, pendingFilePath: '', uploadName: '' }); },
+
+  async onConfirmUpload() {
+    const { pendingFilePath, uploadName, productId } = this.data;
+    if (!uploadName) { showToast('请输入固件名称'); return; }
+    this.setData({ showNameModal: false });
+    showLoading('上传中...');
+    try {
+      const data = await uploadOta(pendingFilePath, { name: uploadName, productId });
+      if (data && data.errorCode === 200) {
+        showToast('上传成功');
+        this.loadList();
+      } else {
+        showToast(data && data.message ? data.message : '上传失败');
+      }
+    } catch (e) { showToast('上传失败'); }
+    finally {
+      hideLoading();
+      this.setData({ pendingFilePath: '', uploadName: '' });
+    }
   },
 
   async onDelete(e) {

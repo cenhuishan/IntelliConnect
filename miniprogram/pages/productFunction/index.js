@@ -1,18 +1,37 @@
 const { getFunctionList, addFunction, deleteFunction } = require('../../api/productFunction');
+const { getModelList } = require('../../api/productModel');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
+
+const TYPE_OPTIONS = ['int', 'float', 'string', 'bool'];
 
 Page({
   data: {
     productId: '',
     list: [],
+    models: [],
+    modelNames: [],
     loading: false,
     showModal: false,
-    form: { functionName: '', jsonKey: '', dataType: 'int', productId: '' }
+    typeOptions: TYPE_OPTIONS,
+    form: { functionName: '', jsonKey: '', description: '', dataType: 'int', type: 'int', modelId: '', max: '', min: '', step: '', unit: '', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - 功能' });
+    this.loadModels(productId);
     this.loadList();
+  },
+
+  async loadModels(productId) {
+    try {
+      const res = await getModelList({ productId });
+      if (res && res.errorCode === 200) {
+        const models = Array.isArray(res.data) ? res.data : [];
+        this.setData({ models, modelNames: models.map(m => m.name || String(m.id)) });
+      }
+    } catch (e) {}
   },
 
   async loadList() {
@@ -27,21 +46,33 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { functionName: '', jsonKey: '', dataType: 'int', productId: this.data.productId } });
+    const { models } = this.data;
+    this.setData({
+      showModal: true,
+      form: { functionName: '', jsonKey: '', description: '', dataType: 'int', type: 'int', modelId: models.length ? models[0].id : '', max: '', min: '', step: '', unit: '', productId: this.data.productId }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
+
   onFormInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
   },
+
   onTypeChange(e) {
-    const types = ['int', 'float', 'string', 'bool'];
-    this.setData({ 'form.dataType': types[e.detail.value] });
+    const t = TYPE_OPTIONS[e.detail.value];
+    this.setData({ 'form.type': t, 'form.dataType': t });
+  },
+
+  onModelChange(e) {
+    this.setData({ 'form.modelId': this.data.models[e.detail.value].id });
   },
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.functionName || !form.jsonKey) { showToast('请填写完整信息'); return; }
+    if (!form.functionName) { showToast('请输入功能名称'); return; }
+    if (!form.jsonKey) { showToast('请输入 JSON Key'); return; }
     showLoading();
     try {
       const res = await addFunction(form);
@@ -56,7 +87,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除？');
+    const ok = await showConfirm('确定删除该功能吗？');
     if (!ok) return;
     showLoading();
     try {

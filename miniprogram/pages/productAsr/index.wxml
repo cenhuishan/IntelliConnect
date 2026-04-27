@@ -1,30 +1,35 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无ASR配置" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无ASR配置，点击+添加" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">ASR配置 #{{item.id}}</text>
+        <text class="item-name">{{item.asrName}}</text>
         <view class="item-actions">
           <text class="action-link" catchtap="onEdit" data-item="{{item}}">编辑</text>
           <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
         </view>
       </view>
-      <text class="info-text">ASR类型: {{item.asrType}}</text>
-      <text class="info-text">TTS类型: {{item.ttsType}}</text>
+      <text class="info-text">供应商: {{item.providerName}}</text>
     </view>
   </view>
+
   <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
       <text class="modal-title">{{editId ? '编辑ASR' : '添加ASR'}}</text>
       <view class="input-item">
-        <text class="input-label">ASR类型</text>
-        <input class="input-field" placeholder="如: dashscope, funasr" data-field="asrType" bindinput="onFormInput" value="{{form.asrType}}" />
+        <text class="input-label">ASR引擎</text>
+        <picker mode="selector" range="{{asrOptions}}" bindchange="onAsrChange">
+          <text class="picker-text">{{form.asrName}}</text>
+        </picker>
       </view>
       <view class="input-item" style="border-bottom:none">
-        <text class="input-label">TTS类型</text>
-        <input class="input-field" placeholder="如: edge, minimax" data-field="ttsType" bindinput="onFormInput" value="{{form.ttsType}}" />
+        <text class="input-label">TTS供应商</text>
+        <picker mode="selector" range="{{providerOptions}}" bindchange="onProviderChange">
+          <text class="picker-text">{{form.providerName}}</text>
+        </picker>
       </view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>

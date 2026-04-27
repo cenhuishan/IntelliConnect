@@ -1,6 +1,9 @@
 const { getAsrList, addAsr, updateAsr, deleteAsr } = require('../../api/productAsr');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
+const ASR_OPTIONS = ['dashscope', 'funasr', 'xunfei'];
+const PROVIDER_OPTIONS = ['dashscope', 'funasr', 'xunfei', 'minimax', 'edge'];
+
 Page({
   data: {
     productId: '',
@@ -8,11 +11,15 @@ Page({
     loading: false,
     showModal: false,
     editId: null,
-    form: { asrType: 'dashscope', ttsType: 'edge', productId: '' }
+    asrOptions: ASR_OPTIONS,
+    providerOptions: PROVIDER_OPTIONS,
+    form: { asrName: 'dashscope', providerName: 'dashscope', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: decodeURIComponent(options.productName || '') + ' - ASR配置' });
     this.loadList();
   },
 
@@ -28,17 +35,26 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, editId: null, form: { asrType: 'dashscope', ttsType: 'edge', productId: this.data.productId } });
+    this.setData({
+      showModal: true,
+      editId: null,
+      form: { asrName: 'dashscope', providerName: 'dashscope', productId: this.data.productId }
+    });
   },
+
   onEdit(e) {
     const item = e.currentTarget.dataset.item;
-    this.setData({ showModal: true, editId: item.id, form: { asrType: item.asrType, ttsType: item.ttsType, productId: this.data.productId } });
+    this.setData({
+      showModal: true,
+      editId: item.id,
+      form: { asrName: item.asrName || 'dashscope', providerName: item.providerName || 'dashscope', productId: this.data.productId }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
-  onFormInput(e) {
-    const field = e.currentTarget.dataset.field;
-    this.setData({ [`form.${field}`]: e.detail.value });
-  },
+
+  onAsrChange(e) { this.setData({ 'form.asrName': ASR_OPTIONS[e.detail.value] }); },
+  onProviderChange(e) { this.setData({ 'form.providerName': PROVIDER_OPTIONS[e.detail.value] }); },
 
   async onSubmit() {
     const { form, editId } = this.data;
@@ -56,7 +72,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除？');
+    const ok = await showConfirm('确定删除该ASR配置吗？');
     if (!ok) return;
     showLoading();
     try {

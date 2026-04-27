@@ -1,31 +1,36 @@
 <view class="container">
   <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-  <empty-view wx:elif="{{list.length === 0}}" text="暂无报警事件" />
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无报警事件，点击+添加" />
   <view wx:else>
     <view class="card" wx:for="{{list}}" wx:key="id">
       <view class="item-header">
-        <text class="item-name">{{item.alarmName}}</text>
+        <text class="item-name">{{item.name}}</text>
         <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
       </view>
-      <text class="info-text">Key: {{item.alarmKey}}</text>
-      <text class="info-text">触发值: {{item.alarmValue}}</text>
+      <text class="info-text">{{item.description}}</text>
     </view>
   </view>
+
   <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
   <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
     <view class="modal-content" catchtap="noop">
       <text class="modal-title">添加报警事件</text>
       <view class="input-item">
-        <text class="input-label">报警名称</text>
-        <input class="input-field" placeholder="报警名称" data-field="alarmName" bindinput="onFormInput" value="{{form.alarmName}}" />
+        <text class="input-label">事件名称</text>
+        <picker mode="selector" range="{{eventNames}}" bindchange="onEventChange">
+          <text class="picker-text">{{form.name || '选择事件'}}</text>
+        </picker>
       </view>
       <view class="input-item">
-        <text class="input-label">属性Key</text>
-        <input class="input-field" placeholder="触发属性Key" data-field="alarmKey" bindinput="onFormInput" value="{{form.alarmKey}}" />
+        <text class="input-label">物模型</text>
+        <picker mode="selector" range="{{modelNames}}" bindchange="onModelChange">
+          <text class="picker-text">{{modelNames.length ? modelNames[0] : '选择物模型'}}</text>
+        </picker>
       </view>
       <view class="input-item" style="border-bottom:none">
-        <text class="input-label">触发值</text>
-        <input class="input-field" placeholder="触发阈值" data-field="alarmValue" bindinput="onFormInput" value="{{form.alarmValue}}" />
+        <text class="input-label">描述</text>
+        <input class="input-field" placeholder="报警描述" data-field="description" bindinput="onFormInput" value="{{form.description}}" />
       </view>
       <view class="modal-footer">
         <button class="btn btn-default" bindtap="onCloseModal">取消</button>

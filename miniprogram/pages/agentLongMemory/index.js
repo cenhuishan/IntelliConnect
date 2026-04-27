@@ -1,18 +1,36 @@
 const { getLongMemoryList, addLongMemory, deleteLongMemory } = require('../../api/agentLongMemory');
+const { getProductList } = require('../../api/product');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
 Page({
   data: {
     productId: '',
     list: [],
+    products: [],
+    productNames: [],
     loading: false,
     showModal: false,
-    form: { memory: '', productId: '' }
+    form: { content: '', productId: '' }
   },
 
   onLoad(options) {
-    this.setData({ productId: options.productId || '' });
+    const productId = options.productId || '';
+    this.setData({ productId });
+    wx.setNavigationBarTitle({ title: '长期记忆' });
+    this.loadProducts();
     this.loadList();
+  },
+
+  onShow() { this.loadList(); },
+
+  async loadProducts() {
+    try {
+      const res = await getProductList();
+      if (res && res.errorCode === 200) {
+        const products = Array.isArray(res.data) ? res.data : [];
+        this.setData({ products, productNames: products.map(p => p.productName || String(p.id)) });
+      }
+    } catch (e) {}
   },
 
   async loadList() {
@@ -27,14 +45,22 @@ Page({
   },
 
   onAdd() {
-    this.setData({ showModal: true, form: { memory: '', productId: this.data.productId } });
+    this.setData({
+      showModal: true,
+      form: { content: '', productId: this.data.productId || (this.data.products.length ? this.data.products[0].id : '') }
+    });
   },
+
   onCloseModal() { this.setData({ showModal: false }); },
-  onFormInput(e) { this.setData({ 'form.memory': e.detail.value }); },
+  onFormInput(e) { this.setData({ 'form.content': e.detail.value }); },
+  onProductChange(e) {
+    const p = this.data.products[e.detail.value];
+    if (p) this.setData({ 'form.productId': p.id });
+  },
 
   async onSubmit() {
     const { form } = this.data;
-    if (!form.memory) { showToast('请输入记忆内容'); return; }
+    if (!form.content) { showToast('请输入记忆内容'); return; }
     showLoading();
     try {
       const res = await addLongMemory(form);
@@ -49,7 +75,7 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const ok = await showConfirm('确定删除？');
+    const ok = await showConfirm('确定删除该记忆吗？');
     if (!ok) return;
     showLoading();
     try {
