@@ -59,8 +59,8 @@ Page({
 
   async onDelete(e) {
     const { id } = e.currentTarget.dataset;
-    const confirm = await showConfirm('确定删除该设备吗？');
-    if (!confirm) return;
+    const confirmed = await showConfirm('确定删除该设备吗？');
+    if (!confirmed) return;
     showLoading();
     try {
       const res = await deleteDevice(id);

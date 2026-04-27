@@ -24,14 +24,13 @@ Page({
 
   startAutoRefresh() {
     this.stopAutoRefresh();
-    const timer = setInterval(() => this.loadData(), 5000);
-    this.data.timer = timer;
+    this._timer = setInterval(() => this.loadData(), 5000);
   },
 
   stopAutoRefresh() {
-    if (this.data.timer) {
-      clearInterval(this.data.timer);
-      this.data.timer = null;
+    if (this._timer) {
+      clearInterval(this._timer);
+      this._timer = null;
     }
   },
 

@@ -7,6 +7,7 @@ Page({
   data: {
     products: [],
     devices: [],
+    selectedProductIdx: -1,
     selectedProductId: '',
     selectedDeviceName: '',
     deviceData: [],
@@ -30,7 +31,8 @@ Page({
   async onProductChange(e) {
     const idx = e.detail.value;
     const product = this.data.products[idx];
-    this.setData({ selectedProductId: product.id, selectedDeviceName: '', devices: [], deviceData: [] });
+    if (!product) return;
+    this.setData({ selectedProductIdx: idx, selectedProductId: product.id, selectedDeviceName: '', devices: [], deviceData: [] });
     try {
       const res = await getDeviceList({ productId: product.id });
       if (res && res.errorCode === 200) {
