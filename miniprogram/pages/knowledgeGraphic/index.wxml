@@ -1,10 +1,11 @@
 <view class="container">
 
-  <!-- Product picker -->
+  <!-- Product picker + refresh -->
   <view class="section-card">
     <view class="row-item">
-      <text class="row-label">产品</text>
-      <picker wx:if="{{productNames.length > 0}}" mode="selector" range="{{productNames}}" value="{{currentProductIndex}}" bindchange="onProductChange">
+      <text class="row-label required-label">产品</text>
+      <picker wx:if="{{productNames.length > 0}}" mode="selector" range="{{productNames}}"
+              value="{{currentProductIndex}}" bindchange="onProductChange">
         <view class="picker-box">
           <text class="picker-val">{{productNames[currentProductIndex] || '请选择产品'}}</text>
           <text class="picker-arrow">▾</text>
@@ -12,107 +13,252 @@
       </picker>
       <text wx:else class="empty-tip-inline">{{productLoading ? '加载中...' : '暂无产品'}}</text>
     </view>
+    <view class="row-item" style="border-bottom:none">
+      <text class="row-label">手动刷新数据</text>
+      <button class="refresh-btn" disabled="{{!currentProductId || loading}}" bindtap="loadGraph" size="mini">
+        {{loading ? '加载中...' : '刷新'}}
+      </button>
+    </view>
   </view>
 
-  <!-- Toggle controls (only shown after product is selected) -->
+  <!-- Settings (only when a product is selected) -->
   <view class="section-card" wx:if="{{currentProductId !== null}}">
     <view class="row-item">
-      <text class="row-label">知识图谱自动生成</text>
-      <switch checked="{{knowledgeGraphicEnable}}" bindchange="onToggleKnowledgeGraphic" color="#1890ff" />
+      <view class="row-label-wrap">
+        <text class="row-label">知识图谱自动生成</text>
+        <text class="hint-text">超过6轮对话自动生成</text>
+      </view>
+      <switch checked="{{knowledgeGraphicEnable}}" bindchange="onToggleKg" color="#1890ff" />
     </view>
-    <view class="row-item">
-      <text class="row-label">遗忘功能</text>
+    <view class="row-item {{knowledgeGraphForgetEnable ? '' : 'last-row'}}">
+      <text class="row-label">知识图谱遗忘功能</text>
       <switch checked="{{knowledgeGraphForgetEnable}}" bindchange="onToggleForget" color="#1890ff" />
     </view>
-    <view class="row-item" wx:if="{{knowledgeGraphForgetEnable}}">
-      <text class="row-label">遗忘轮次</text>
-      <input class="epoch-input" type="number" value="{{knowledgeGraphForgetEpoch}}" bindinput="onEpochInput" bindblur="onEpochBlur" />
+    <view wx:if="{{knowledgeGraphForgetEnable}}" class="row-item last-row">
+      <view class="row-label-wrap">
+        <text class="row-label">遗忘轮次</text>
+        <text class="hint-text">小于4时不生效</text>
+      </view>
+      <input class="epoch-input" type="number" value="{{knowledgeGraphForgetEpoch}}"
+             bindinput="onEpochInput" bindblur="onEpochBlur" />
     </view>
   </view>
 
-  <!-- Tabs -->
+  <!-- Tab bar -->
   <view class="tab-bar card">
-    <view class="tab-item {{activeTab === idx ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="*this" wx:for-index="idx"
-          bindtap="onTabChange" data-idx="{{idx}}">{{item}}</view>
-  </view>
-
-  <view wx:if="{{activeTab === 0}}">
-    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
-    <empty-view wx:elif="{{graphicList.length === 0}}" text="暂无知识图谱" />
-    <view wx:else>
-      <view class="card" wx:for="{{graphicList}}" wx:key="id"
-            bindtap="onSelectGraphic" data-id="{{item.id}}">
-        <view class="item-header">
-          <text class="item-name">{{item.graphicName}}</text>
-          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="graphic">删除</text>
-        </view>
-        <text class="nav-hint">点击查看节点 →</text>
-      </view>
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" bindtap="onTabChange" data-idx="0">
+      节点（{{nodes.length}}）
+    </view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-idx="1">
+      关系（{{relations.length}}）
     </view>
   </view>
 
-  <view wx:elif="{{activeTab === 1}}">
-    <view wx:if="{{!selectedGraphicId}}" class="empty-tip">请先在图谱标签中选择一个图谱</view>
-    <empty-view wx:elif="{{nodeList.length === 0}}" text="暂无节点" />
+  <!-- Loading indicator -->
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+
+  <!-- ── NODES TAB ─────────────────────────────────────────────────────── -->
+  <block wx:elif="{{activeTab === 0}}">
+    <view wx:if="{{nodes.length === 0}}" class="empty-tip">暂无节点，点击右下角 + 添加</view>
     <view wx:else>
-      <view class="card" wx:for="{{nodeList}}" wx:key="id"
-            bindtap="onSelectNode" data-id="{{item.id}}">
-        <view class="item-header">
-          <text class="item-name">{{item.nodeName}}</text>
-          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="node">删除</text>
+      <view wx:for="{{nodes}}" wx:key="id" wx:for-item="node">
+        <view class="card node-card" bindtap="onNodeTap" data-name="{{node.name}}">
+
+          <!-- Card header (always visible) -->
+          <view class="item-header">
+            <text class="item-name">{{node.name}}</text>
+            <view class="node-meta">
+              <view wx:if="{{node.attributes && node.attributes.length > 0}}" class="attr-badge">
+                <text>{{node.attributes.length}} 属性</text>
+              </view>
+              <text class="expand-arrow">{{expandedNodeName === node.name ? '▲' : '▼'}}</text>
+            </view>
+          </view>
+          <text class="info-text desc-text">{{node.des}}</text>
+
+          <!-- ── Expanded detail ── -->
+          <view wx:if="{{expandedNodeName === node.name}}" class="node-detail" catchtap="noop">
+            <view class="detail-divider"></view>
+
+            <!-- Edit mode -->
+            <view wx:if="{{editingNodeName === node.name}}">
+              <view class="input-item">
+                <text class="input-label">节点名称</text>
+                <input class="input-field" value="{{editNodeName}}" maxlength="10"
+                       placeholder="不超过10字" bindinput="onEditNodeNameInput" />
+              </view>
+              <view class="input-item" style="border-bottom:none">
+                <text class="input-label">节点描述</text>
+                <textarea class="input-field textarea-field" value="{{editNodeDes}}" maxlength="255"
+                          placeholder="不超过255字" bindinput="onEditNodeDesInput" />
+              </view>
+              <view class="detail-footer">
+                <button class="detail-btn btn-default-sm" catchtap="onCancelEditNode">取消</button>
+                <button class="detail-btn btn-primary-sm" catchtap="onSubmitEditNode">保存</button>
+              </view>
+            </view>
+
+            <!-- View mode -->
+            <view wx:else>
+              <!-- Attributes -->
+              <view class="attr-section">
+                <text class="attr-section-title">属性</text>
+                <view class="attr-tags">
+                  <view wx:if="{{expandedNodeAttrs.length === 0}}" class="no-attr-tip">
+                    <text class="empty-tip-inline">该节点暂无属性</text>
+                  </view>
+                  <view wx:for="{{expandedNodeAttrs}}" wx:key="id" wx:for-item="attr"
+                        wx:for-index="attrIdx" class="attr-tag">
+                    <text class="attr-tag-name">{{attr.name}}</text>
+                    <text class="attr-tag-del" catchtap="onDeleteAttr"
+                          data-attr-name="{{attr.name}}" data-node-name="{{node.name}}">×</text>
+                  </view>
+                </view>
+
+                <!-- Add attribute inline form -->
+                <view wx:if="{{addingAttrForNode === node.name}}" class="add-attr-form">
+                  <input class="attr-input" value="{{newAttrName}}" maxlength="10"
+                         placeholder="属性名（不超过10字）" bindinput="onNewAttrInput" />
+                  <view class="add-attr-btns">
+                    <button class="detail-btn btn-default-sm" catchtap="onCancelAddAttr">取消</button>
+                    <button class="detail-btn btn-primary-sm" catchtap="onSubmitAddAttr">提交</button>
+                  </view>
+                </view>
+                <button wx:else class="add-attr-btn" catchtap="onStartAddAttr"
+                        data-name="{{node.name}}" size="mini">＋ 添加属性</button>
+              </view>
+
+              <!-- Node actions -->
+              <view class="detail-footer">
+                <button class="detail-btn btn-primary-sm" catchtap="onStartEditNode"
+                        data-name="{{node.name}}">编辑节点</button>
+                <button class="detail-btn btn-danger-sm" catchtap="onDeleteNode"
+                        data-name="{{node.name}}">删除节点</button>
+              </view>
+            </view>
+          </view>
         </view>
-        <text class="nav-hint">点击查看属性 →</text>
       </view>
     </view>
-  </view>
+  </block>
 
-  <view wx:else>
-    <view wx:if="{{!selectedNodeId}}" class="empty-tip">请先在节点标签中选择一个节点</view>
-    <empty-view wx:elif="{{attrList.length === 0}}" text="暂无属性" />
+  <!-- ── RELATIONS TAB ─────────────────────────────────────────────────── -->
+  <block wx:elif="{{activeTab === 1}}">
+    <view wx:if="{{relations.length === 0}}" class="empty-tip">暂无关系，点击右下角 + 添加</view>
     <view wx:else>
-      <view class="card" wx:for="{{attrList}}" wx:key="id">
-        <view class="item-header">
-          <text class="item-name">{{item.attrKey}}</text>
-          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}" data-type="attr">删除</text>
+      <view wx:for="{{relations}}" wx:key="id" wx:for-item="rel" wx:for-index="idx">
+        <view class="card relation-card" bindtap="onRelationTap" data-idx="{{idx}}">
+
+          <!-- Card header -->
+          <view class="item-header">
+            <text class="item-name rel-name">{{rel.from}} → {{rel.to}}</text>
+            <text class="expand-arrow">{{expandedRelationIdx === idx ? '▲' : '▼'}}</text>
+          </view>
+          <text class="info-text rel-des">{{rel.des}}</text>
+
+          <!-- ── Expanded detail ── -->
+          <view wx:if="{{expandedRelationIdx === idx}}" class="node-detail" catchtap="noop">
+            <view class="detail-divider"></view>
+
+            <!-- Edit mode -->
+            <view wx:if="{{editingRelationIdx === idx}}">
+              <view class="input-item">
+                <text class="input-label">源节点</text>
+                <input class="input-field" value="{{rel.from}}" disabled />
+              </view>
+              <view class="input-item">
+                <text class="input-label">目标节点</text>
+                <input class="input-field" value="{{rel.to}}" disabled />
+              </view>
+              <view class="input-item" style="border-bottom:none">
+                <text class="input-label">关系描述</text>
+                <textarea class="input-field textarea-field" value="{{editRelationDes}}" maxlength="255"
+                          placeholder="不超过255字" bindinput="onEditRelationDesInput" />
+              </view>
+              <view class="detail-footer">
+                <button class="detail-btn btn-default-sm" catchtap="onCancelEditRelation">取消</button>
+                <button class="detail-btn btn-primary-sm" catchtap="onSubmitEditRelation">保存</button>
+              </view>
+            </view>
+
+            <!-- View mode -->
+            <view wx:else>
+              <view class="detail-footer">
+                <button class="detail-btn btn-primary-sm" catchtap="onStartEditRelation"
+                        data-idx="{{idx}}">编辑关系</button>
+                <button class="detail-btn btn-danger-sm" catchtap="onDeleteRelation"
+                        data-idx="{{idx}}">删除关系</button>
+              </view>
+            </view>
+          </view>
         </view>
-        <text class="info-text">{{item.attrValue}}</text>
       </view>
     </view>
+  </block>
+
+  <!-- FAB -->
+  <view class="fab" bindtap="onFab">
+    <text class="fab-text">+</text>
   </view>
 
-  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
-
-  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+  <!-- ── Add Node modal ──────────────────────────────────────────────── -->
+  <view class="modal-mask" wx:if="{{showAddNodeModal}}" bindtap="onCloseAddNodeModal">
     <view class="modal-content" catchtap="noop">
-      <text class="modal-title">
-        {{modalType === 'graphic' ? '添加图谱' : (modalType === 'node' ? '添加节点' : '添加属性')}}
-      </text>
-      <view wx:if="{{modalType === 'graphic'}}">
-        <view class="input-item" style="border-bottom:none">
-          <text class="input-label">图谱名称</text>
-          <input class="input-field" placeholder="图谱名称" data-field="graphicName" bindinput="onFormInput" />
-        </view>
+      <text class="modal-title">添加节点</text>
+      <view class="input-item">
+        <text class="input-label">节点名称</text>
+        <input class="input-field" placeholder="不超过10字" maxlength="10"
+               value="{{addNodeName}}" bindinput="onAddNodeNameInput" />
       </view>
-      <view wx:elif="{{modalType === 'node'}}">
-        <view class="input-item" style="border-bottom:none">
-          <text class="input-label">节点名称</text>
-          <input class="input-field" placeholder="节点名称" data-field="nodeName" bindinput="onFormInput" />
-        </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">节点描述</text>
+        <textarea class="input-field textarea-field" placeholder="不超过255字" maxlength="255"
+                  value="{{addNodeDes}}" bindinput="onAddNodeDesInput" />
       </view>
-      <view wx:else>
-        <view class="input-item">
-          <text class="input-label">属性Key</text>
-          <input class="input-field" placeholder="属性Key" data-field="attrKey" bindinput="onFormInput" />
-        </view>
-        <view class="input-item" style="border-bottom:none">
-          <text class="input-label">属性值</text>
-          <input class="input-field" placeholder="属性值" data-field="attrValue" bindinput="onFormInput" />
-        </view>
+      <view class="hint-block">
+        <text class="hint-text">提示：节点名称重复时会更新该节点的描述</text>
       </view>
       <view class="modal-footer">
-        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
-        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+        <button class="btn btn-default" bindtap="onCloseAddNodeModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmitAddNode">确认</button>
       </view>
     </view>
   </view>
+
+  <!-- ── Add Relation modal ───────────────────────────────────────────── -->
+  <view class="modal-mask" wx:if="{{showAddRelationModal}}" bindtap="onCloseAddRelationModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加关系</text>
+      <view class="input-item">
+        <text class="input-label">源节点</text>
+        <picker mode="selector" range="{{nodeNames}}" value="{{addRelFromIndex}}"
+                bindchange="onAddRelFromChange">
+          <view class="picker-box">
+            <text class="picker-val">{{nodeNames[addRelFromIndex] || '请选择'}}</text>
+            <text class="picker-arrow">▾</text>
+          </view>
+        </picker>
+      </view>
+      <view class="input-item">
+        <text class="input-label">目标节点</text>
+        <picker mode="selector" range="{{nodeNames}}" value="{{addRelToIndex}}"
+                bindchange="onAddRelToChange">
+          <view class="picker-box">
+            <text class="picker-val">{{nodeNames[addRelToIndex] || '请选择'}}</text>
+            <text class="picker-arrow">▾</text>
+          </view>
+        </picker>
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">关系描述</text>
+        <textarea class="input-field textarea-field" placeholder="不超过255字（可选）" maxlength="255"
+                  value="{{addRelDes}}" bindinput="onAddRelDesInput" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseAddRelationModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmitAddRelation">确认</button>
+      </view>
+    </view>
+  </view>
+
 </view>
