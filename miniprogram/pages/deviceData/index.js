@@ -33,6 +33,7 @@ Page({
   onUnload() {
     if (this.data.refreshTimer) {
       clearInterval(this.data.refreshTimer)
+      this.setData({ refreshTimer: null })
     }
   },
 
@@ -42,7 +43,10 @@ Page({
         if (res.data.errorCode === 200) {
           const models = res.data.data || []
           const keys = []
-          // Models have no direct jsonKeys here (those are in ProductData), show model names
+          // Note: ProductData property keys (jsonKey) belong to ProductData entities under each
+          // model, not the model entity itself. Here we use model names as query keys.
+          // For full property key support, extend the /wxProductModel endpoint to include
+          // nested ProductData definitions and update this mapping accordingly.
           models.forEach((m) => keys.push(m.name))
           this.setData({ jsonKeys: keys, selectedKey: keys[0] || '' })
           if (keys.length > 0) {

@@ -50,4 +50,8 @@ Page({
   goToChat() {
     wx.switchTab({ url: '/pages/chat/index' })
   },
+
+  goToProducts() {
+    wx.switchTab({ url: '/pages/products/index' })
+  },
 })

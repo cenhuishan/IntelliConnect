@@ -30,7 +30,7 @@
       <text class="nav-icon">🤖</text>
       <text class="nav-label">AI 助手</text>
     </view>
-    <view class="nav-item" bindtap="() => wx.switchTab({url:'/pages/products/index'})">
+    <view class="nav-item" bindtap="goToProducts">
       <text class="nav-icon">📦</text>
       <text class="nav-label">产品列表</text>
     </view>

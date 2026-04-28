@@ -84,7 +84,13 @@ public class WxMini {
   // Helper: resolve WxUserEntity from JWT or return null
   // ─────────────────────────────────────────────
   private WxUserEntity resolveWxUser(String header) {
+    if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+      return null;
+    }
     String token = header.replace(JwtTokenUtil.TOKEN_PREFIX, "");
+    if (JwtTokenUtil.checkJWT(token) == null) {
+      return null;
+    }
     String role = JwtTokenUtil.getUserRole(token);
     if (!role.equals("ROLE_wx_user")) {
       return null;
@@ -301,6 +307,9 @@ public class WxMini {
       if (!bindList.isEmpty()) {
         productId = bindList.get(0).getProductId();
       }
+    }
+    if (productId == 0) {
+      return ResultTool.fail(ResultCode.PARAM_NOT_VALID);
     }
     String reply = router.response(wxChatRequest.getMessage(), openid, productId, appid);
     return ResultTool.success(new WxChatResponse(reply));

@@ -29,7 +29,7 @@ function request(options) {
       success(res) {
         if (res.statusCode === 401 || res.statusCode === 403) {
           wx.removeStorageSync('token')
-          wx.redirectTo({ url: '/pages/login/index' })
+          wx.reLaunch({ url: '/pages/login/index' })
           reject(res)
           return
         }
