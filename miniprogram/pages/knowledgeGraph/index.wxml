@@ -1,0 +1,105 @@
+<view class="container">
+  <!-- Page header -->
+  <view class="page-header">
+    <text class="section-title">知识图谱</text>
+    <button class="btn-add-sm" bindtap="openAddNodeModal">+ 节点</button>
+  </view>
+
+  <!-- Node list -->
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+  <view wx:elif="{{nodes.length === 0}}" class="empty-state">
+    暂无节点，请点击右上角添加
+  </view>
+
+  <view wx:else class="node-list">
+    <view
+      class="node-item card {{selectedNode && selectedNode.id === item.id ? 'selected' : ''}}"
+      wx:for="{{nodes}}"
+      wx:key="id"
+      bindtap="onSelectNode"
+      data-node="{{item}}"
+    >
+      <view class="node-left">
+        <text class="node-name">{{item.name}}</text>
+        <text class="node-des">{{item.des || '无描述'}}</text>
+        <text class="node-id">ID: {{item.id}}</text>
+      </view>
+      <view class="node-actions">
+        <text class="action-btn edit" catchtap="openEditNodeModal" data-node="{{item}}">编辑</text>
+        <text class="action-btn del" catchtap="onDeleteNode" data-node="{{item}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Node detail panel -->
+  <view wx:if="{{selectedNode}}" class="detail-panel">
+    <view class="detail-header">
+      <text class="detail-title">{{selectedNode.name}}</text>
+      <text class="close-btn" bindtap="onCloseDetail">✕</text>
+    </view>
+
+    <!-- Attributes -->
+    <view class="detail-section">
+      <view class="detail-section-header">
+        <text class="detail-section-title">属性</text>
+        <text class="add-link" bindtap="openAddAttrModal">+ 添加</text>
+      </view>
+      <view wx:if="{{attributes.length === 0}}" class="detail-empty">暂无属性</view>
+      <view class="attr-item" wx:for="{{attributes}}" wx:key="id">
+        <text class="attr-name">{{item.name}}</text>
+        <text class="attr-del" catchtap="onDeleteAttr" data-attr="{{item}}">删除</text>
+      </view>
+    </view>
+
+    <!-- Relations -->
+    <view class="detail-section">
+      <view class="detail-section-header">
+        <text class="detail-section-title">关系</text>
+        <text class="add-link" bindtap="openAddRelModal">+ 添加</text>
+      </view>
+      <view wx:if="{{relations.length === 0}}" class="detail-empty">暂无关系</view>
+      <view class="rel-item" wx:for="{{relations}}" wx:key="id">
+        <view class="rel-info">
+          <text class="rel-des">{{item.des}}</text>
+          <text class="rel-nodes">{{item.from}} → {{item.to}}</text>
+        </view>
+        <text class="rel-del" catchtap="onDeleteRel" data-rel="{{item}}">删除</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Node modal -->
+  <view class="modal-mask" wx:if="{{showNodeModal}}" bindtap="closeNodeModal"></view>
+  <view class="modal" wx:if="{{showNodeModal}}">
+    <text class="modal-title">{{editingNodeId ? '编辑节点' : '添加节点'}}</text>
+    <input class="modal-input" placeholder="节点名称（必填）" bindinput="onNodeNameInput" value="{{nodeForm.name}}" />
+    <input class="modal-input" placeholder="节点描述（选填）" bindinput="onNodeDesInput" value="{{nodeForm.des}}" />
+    <view class="modal-footer">
+      <button class="btn-ghost" bindtap="closeNodeModal">取消</button>
+      <button class="btn-primary" bindtap="onConfirmNode">确认</button>
+    </view>
+  </view>
+
+  <!-- Attribute modal -->
+  <view class="modal-mask" wx:if="{{showAttrModal}}" bindtap="closeAttrModal"></view>
+  <view class="modal" wx:if="{{showAttrModal}}">
+    <text class="modal-title">添加属性</text>
+    <input class="modal-input" placeholder="属性名称" bindinput="onAttrNameInput" value="{{attrForm.name}}" />
+    <view class="modal-footer">
+      <button class="btn-ghost" bindtap="closeAttrModal">取消</button>
+      <button class="btn-primary" bindtap="onConfirmAttr">确认</button>
+    </view>
+  </view>
+
+  <!-- Relation modal -->
+  <view class="modal-mask" wx:if="{{showRelModal}}" bindtap="closeRelModal"></view>
+  <view class="modal" wx:if="{{showRelModal}}">
+    <text class="modal-title">添加关系</text>
+    <input class="modal-input" placeholder="关系描述（必填）" bindinput="onRelDesInput" value="{{relForm.des}}" />
+    <input class="modal-input" placeholder="目标节点 ID（必填）" type="number" bindinput="onRelToNodeInput" value="{{relForm.toNodeId}}" />
+    <view class="modal-footer">
+      <button class="btn-ghost" bindtap="closeRelModal">取消</button>
+      <button class="btn-primary" bindtap="onConfirmRel">确认</button>
+    </view>
+  </view>
+</view>

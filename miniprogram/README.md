@@ -12,6 +12,7 @@
 | 设备数据 | `pages/deviceData` | 查询设备历史属性数据，支持时间筛选 |
 | 事件告警 | `pages/alarms` | 下拉刷新查看所有绑定产品的告警事件 |
 | AI 助手 | `pages/chat` | 与 AI 智能体对话，支持设备控制和问答 |
+| **知识图谱** | `pages/knowledgeGraph` | 查看/管理激活产品的知识图谱（节点、属性、关系） |
 | 登录 | `pages/login` | 微信静默登录（仅在 token 失效时触发） |
 
 ## 快速开始
@@ -67,6 +68,20 @@ wx:
 | 事件数据定义 | `/api/wx/v1/wxEventData` | GET |
 | 告警事件 | `/api/wx/v1/wxAlarmEvents` | GET |
 | AI 对话 | `/api/wx/v1/wxChat` | POST |
+| **知识图谱（完整）** | `/api/wx/v1/kg/graphic` | GET |
+| **节点列表** | `/api/wx/v1/kg/nodes` | GET |
+| **获取节点** | `/api/wx/v1/kg/node?name=` | GET |
+| **添加节点** | `/api/wx/v1/kg/node` | POST |
+| **更新节点** | `/api/wx/v1/kg/node` | PUT |
+| **删除节点** | `/api/wx/v1/kg/node` | DELETE |
+| **获取节点属性** | `/api/wx/v1/kg/attr?nodeId=` | GET |
+| **添加属性** | `/api/wx/v1/kg/attr` | POST |
+| **更新属性** | `/api/wx/v1/kg/attr` | PUT |
+| **删除属性** | `/api/wx/v1/kg/attr` | DELETE |
+| **获取节点关系** | `/api/wx/v1/kg/relation?nodeId=` | GET |
+| **添加关系** | `/api/wx/v1/kg/relation` | POST |
+| **更新关系** | `/api/wx/v1/kg/relation` | PUT |
+| **删除关系** | `/api/wx/v1/kg/relation` | DELETE |
 
 ## 目录结构
 
@@ -82,18 +97,20 @@ miniprogram/
 │   ├── request.js      # HTTP 请求封装，自动注入 JWT
 │   └── auth.js         # 微信登录流程
 ├── api/
-│   ├── product.js      # 产品相关接口
-│   ├── device.js       # 设备相关接口
-│   ├── alarm.js        # 告警接口
-│   └── chat.js         # AI 对话接口
+│   ├── product.js         # 产品相关接口
+│   ├── device.js          # 设备相关接口
+│   ├── alarm.js           # 告警接口
+│   ├── chat.js            # AI 对话接口
+│   └── knowledgeGraph.js  # 知识图谱接口
 ├── pages/
-│   ├── index/          # 首页
-│   ├── products/       # 产品管理
-│   ├── devices/        # 设备列表
-│   ├── deviceData/     # 设备数据图表
-│   ├── alarms/         # 事件告警
-│   ├── chat/           # AI 助手
-│   └── login/          # 登录页
+│   ├── index/             # 首页
+│   ├── products/          # 产品管理
+│   ├── devices/           # 设备列表
+│   ├── deviceData/        # 设备数据图表
+│   ├── alarms/            # 事件告警
+│   ├── chat/              # AI 助手
+│   ├── knowledgeGraph/    # 知识图谱（节点/属性/关系管理）
+│   └── login/             # 登录页
 └── components/
     ├── product-card/   # 产品卡片组件
     ├── device-item/    # 设备列表项组件

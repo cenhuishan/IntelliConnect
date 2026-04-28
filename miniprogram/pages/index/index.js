@@ -54,4 +54,8 @@ Page({
   goToProducts() {
     wx.switchTab({ url: '/pages/products/index' })
   },
+
+  goToKnowledgeGraph() {
+    wx.navigateTo({ url: '/pages/knowledgeGraph/index' })
+  },
 })

@@ -30,7 +30,11 @@ import top.rslly.iot.param.request.WxActiveProduct;
 import top.rslly.iot.param.request.WxChatRequest;
 import top.rslly.iot.param.response.WxChatResponse;
 import top.rslly.iot.services.iot.AlarmEventServiceImpl;
+import top.rslly.iot.services.knowledgeGraphic.KnowledgeGraphicService;
 import top.rslly.iot.services.thingsModel.*;
+import top.rslly.iot.param.request.KnowledgeGraphicNode;
+import top.rslly.iot.param.request.KnowledgeGraphicRelation;
+import top.rslly.iot.param.request.KnowledgeGraphicAttribute;
 import top.rslly.iot.services.wechat.WxProductActiveServiceImpl;
 import top.rslly.iot.services.wechat.WxProductBindServiceImpl;
 import top.rslly.iot.services.wechat.WxUserServiceImpl;
@@ -76,6 +80,8 @@ public class WxMini {
   private DataServiceImpl dataService;
   @Autowired
   private Router router;
+  @Autowired
+  private KnowledgeGraphicService knowledgeGraphicService;
 
   @Value("${wx.micro.appid}")
   private String microAppid;
@@ -313,5 +319,268 @@ public class WxMini {
     }
     String reply = router.response(wxChatRequest.getMessage(), openid, productId, appid);
     return ResultTool.success(new WxChatResponse(reply));
+  }
+
+  // ─────────────────────────────────────────────
+  // Knowledge Graph helper: verify active product belongs to wx user
+  // ─────────────────────────────────────────────
+  private int resolveActiveProductForUser(WxUserEntity user) {
+    var activeList =
+        wxProductActiveService.findAllByAppidAndOpenid(user.getAppid(), user.getOpenid());
+    if (!activeList.isEmpty()) {
+      return activeList.get(0).getProductId();
+    }
+    var bindList = wxProductBindService.findAllByAppidAndOpenid(user.getAppid(), user.getOpenid());
+    if (!bindList.isEmpty()) {
+      return bindList.get(0).getProductId();
+    }
+    return 0;
+  }
+
+  private boolean userOwnsProduct(WxUserEntity user, int productId) {
+    return !wxProductBindService
+        .findByAppidAndOpenidAndProductId(user.getAppid(), user.getOpenid(), productId).isEmpty();
+  }
+
+  // ─────────────────────────────────────────────
+  // 11. GET /kg/graphic — full knowledge graph for active product
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/graphic", method = RequestMethod.GET)
+  public JsonResult<?> getKnowledgeGraphic(@RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.getKnowledgeGraphicByProductId(productId);
+  }
+
+  // ─────────────────────────────────────────────
+  // 12. GET /kg/nodes — all nodes for active product
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/nodes", method = RequestMethod.GET)
+  public JsonResult<?> getKgNodes(@RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.getNodes(productId);
+  }
+
+  // ─────────────────────────────────────────────
+  // 13. GET /kg/node — get a node by name
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/node", method = RequestMethod.GET)
+  public JsonResult<?> getKgNode(@RequestParam("name") String name,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.getNode(name, productId);
+  }
+
+  // ─────────────────────────────────────────────
+  // 14. POST /kg/node — add a knowledge graph node
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/node", method = RequestMethod.POST)
+  public JsonResult<?> addKgNode(@Valid @RequestBody KnowledgeGraphicNode node,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    node.productId = productId;
+    return knowledgeGraphicService.addNode(node);
+  }
+
+  // ─────────────────────────────────────────────
+  // 15. PUT /kg/node — update a knowledge graph node
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/node", method = RequestMethod.PUT)
+  public JsonResult<?> updateKgNode(@RequestBody KnowledgeGraphicNode node,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    node.productId = productId;
+    return knowledgeGraphicService.updateNode(node);
+  }
+
+  // ─────────────────────────────────────────────
+  // 16. DELETE /kg/node — delete a knowledge graph node by id
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/node", method = RequestMethod.DELETE)
+  public JsonResult<?> deleteKgNode(@Valid @RequestBody KnowledgeGraphicNode node,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.deleteNode(node.id);
+  }
+
+  // ─────────────────────────────────────────────
+  // 17. GET /kg/attr — get attributes for a node
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/attr", method = RequestMethod.GET)
+  public JsonResult<?> getKgAttributes(@RequestParam("nodeId") long nodeId,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.getAttributes(nodeId);
+  }
+
+  // ─────────────────────────────────────────────
+  // 18. POST /kg/attr — add attribute to a node
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/attr", method = RequestMethod.POST)
+  public JsonResult<?> addKgAttribute(@Valid @RequestBody KnowledgeGraphicAttribute attribute,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    attribute.productId = productId;
+    return knowledgeGraphicService.addAttribute(attribute);
+  }
+
+  // ─────────────────────────────────────────────
+  // 19. DELETE /kg/attr — delete an attribute
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/attr", method = RequestMethod.DELETE)
+  public JsonResult<?> deleteKgAttribute(@RequestBody KnowledgeGraphicAttribute attribute,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    attribute.productId = productId;
+    return knowledgeGraphicService.deleteAttribute(attribute);
+  }
+
+  // ─────────────────────────────────────────────
+  // 20. PUT /kg/attr — update an attribute name
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/attr", method = RequestMethod.PUT)
+  public JsonResult<?> updateKgAttribute(@Valid @RequestBody KnowledgeGraphicAttribute attribute,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.updateAttribute(attribute.name, attribute.id);
+  }
+
+  // ─────────────────────────────────────────────
+  // 21. GET /kg/relation — get relations for a node
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/relation", method = RequestMethod.GET)
+  public JsonResult<?> getKgRelations(@RequestParam("nodeId") long nodeId,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.getNodeRelations(nodeId);
+  }
+
+  // ─────────────────────────────────────────────
+  // 22. POST /kg/relation — add a relation
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/relation", method = RequestMethod.POST)
+  public JsonResult<?> addKgRelation(@Valid @RequestBody KnowledgeGraphicRelation relation,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    relation.productId = productId;
+    return knowledgeGraphicService.addRelation(relation);
+  }
+
+  // ─────────────────────────────────────────────
+  // 23. DELETE /kg/relation — delete a relation by from/to nodes
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/relation", method = RequestMethod.DELETE)
+  public JsonResult<?> deleteKgRelation(@RequestBody KnowledgeGraphicRelation relation,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    return knowledgeGraphicService.deleteRelationByFromAndTo(relation.from, relation.to);
+  }
+
+  // ─────────────────────────────────────────────
+  // 24. PUT /kg/relation — update a relation description
+  // ─────────────────────────────────────────────
+  @RequestMapping(value = "/kg/relation", method = RequestMethod.PUT)
+  public JsonResult<?> updateKgRelation(@RequestBody KnowledgeGraphicRelation relation,
+      @RequestHeader("Authorization") String header) {
+    WxUserEntity user = resolveWxUser(header);
+    if (user == null) {
+      return ResultTool.fail(ResultCode.USER_ACCOUNT_NOT_EXIST);
+    }
+    int productId = resolveActiveProductForUser(user);
+    if (productId == 0 || !userOwnsProduct(user, productId)) {
+      return ResultTool.fail(ResultCode.NO_PERMISSION);
+    }
+    relation.productId = productId;
+    return knowledgeGraphicService.updateRelation(relation);
   }
 }

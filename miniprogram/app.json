@@ -6,6 +6,7 @@
     "pages/deviceData/index",
     "pages/alarms/index",
     "pages/chat/index",
+    "pages/knowledgeGraph/index",
     "pages/login/index"
   ],
   "window": {

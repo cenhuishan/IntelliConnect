@@ -34,5 +34,9 @@
       <text class="nav-icon">📦</text>
       <text class="nav-label">产品列表</text>
     </view>
+    <view class="nav-item" bindtap="goToKnowledgeGraph">
+      <text class="nav-icon">🕸️</text>
+      <text class="nav-label">知识图谱</text>
+    </view>
   </view>
 </view>
