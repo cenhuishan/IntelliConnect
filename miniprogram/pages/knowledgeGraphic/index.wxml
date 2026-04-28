@@ -1,4 +1,36 @@
 <view class="container">
+
+  <!-- Product picker -->
+  <view class="section-card">
+    <view class="row-item">
+      <text class="row-label">产品</text>
+      <picker wx:if="{{productNames.length > 0}}" mode="selector" range="{{productNames}}" value="{{currentProductIndex}}" bindchange="onProductChange">
+        <view class="picker-box">
+          <text class="picker-val">{{productNames[currentProductIndex] || '请选择产品'}}</text>
+          <text class="picker-arrow">▾</text>
+        </view>
+      </picker>
+      <text wx:else class="empty-tip-inline">{{productLoading ? '加载中...' : '暂无产品'}}</text>
+    </view>
+  </view>
+
+  <!-- Toggle controls (only shown after product is selected) -->
+  <view class="section-card" wx:if="{{currentProductId !== null}}">
+    <view class="row-item">
+      <text class="row-label">知识图谱自动生成</text>
+      <switch checked="{{knowledgeGraphicEnable}}" bindchange="onToggleKnowledgeGraphic" color="#1890ff" />
+    </view>
+    <view class="row-item">
+      <text class="row-label">遗忘功能</text>
+      <switch checked="{{knowledgeGraphForgetEnable}}" bindchange="onToggleForget" color="#1890ff" />
+    </view>
+    <view class="row-item" wx:if="{{knowledgeGraphForgetEnable}}">
+      <text class="row-label">遗忘轮次</text>
+      <input class="epoch-input" type="number" value="{{knowledgeGraphForgetEpoch}}" bindinput="onEpochInput" bindblur="onEpochBlur" />
+    </view>
+  </view>
+
+  <!-- Tabs -->
   <view class="tab-bar card">
     <view class="tab-item {{activeTab === idx ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="*this" wx:for-index="idx"
           bindtap="onTabChange" data-idx="{{idx}}">{{item}}</view>
