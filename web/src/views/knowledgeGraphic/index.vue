@@ -224,7 +224,7 @@ function handleKnowledgeGraphForgetEpochChange(value) {
   }
   const data = {
     productId: currentProductId.value,
-    value: knowledgeGraphForgetEpoch.value,
+    value: String(knowledgeGraphForgetEpoch.value),
   }
   updateKnowledgeGraphicForgetEpoch(data).then((res) => resultPreFilter(res))
 }
@@ -725,7 +725,7 @@ function getCurrentKnowledgeGraphForgetEpoch() {
       if (data === null) {
         const createData = {
           productId: currentProductId.value,
-          value: 10,
+          value: '10',
         }
         updateKnowledgeGraphicForgetEpoch(createData)
       } else {
