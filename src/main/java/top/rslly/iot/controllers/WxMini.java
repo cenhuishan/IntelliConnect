@@ -405,7 +405,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    node.productId = productId;
+    node.setProductId(productId);
     return knowledgeGraphicService.addNode(node);
   }
 
@@ -423,7 +423,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    node.productId = productId;
+    node.setProductId(productId);
     return knowledgeGraphicService.updateNode(node);
   }
 
@@ -475,7 +475,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    attribute.productId = productId;
+    attribute.setProductId(productId);
     return knowledgeGraphicService.addAttribute(attribute);
   }
 
@@ -493,7 +493,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    attribute.productId = productId;
+    attribute.setProductId(productId);
     return knowledgeGraphicService.deleteAttribute(attribute);
   }
 
@@ -545,7 +545,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    relation.productId = productId;
+    relation.setProductId(productId);
     return knowledgeGraphicService.addRelation(relation);
   }
 
@@ -580,7 +580,7 @@ public class WxMini {
     if (productId == 0 || !userOwnsProduct(user, productId)) {
       return ResultTool.fail(ResultCode.NO_PERMISSION);
     }
-    relation.productId = productId;
+    relation.setProductId(productId);
     return knowledgeGraphicService.updateRelation(relation);
   }
 }

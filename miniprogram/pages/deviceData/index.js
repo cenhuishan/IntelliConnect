@@ -43,7 +43,7 @@ Page({
         if (res.data.errorCode === 200) {
           const models = res.data.data || []
           const keys = []
-          // Note: ProductData property keys (jsonKey) belong to ProductData entities under each
+          // TODO: ProductData property keys (jsonKey) belong to ProductData entities under each
           // model, not the model entity itself. Here we use model names as query keys.
           // For full property key support, extend the /wxProductModel endpoint to include
           // nested ProductData definitions and update this mapping accordingly.
@@ -86,8 +86,9 @@ Page({
   },
 
   drawChart(data) {
-    // Simple text-based chart — replace with ec-canvas / wx-charts for real charts
-    // The chartData binding renders a table; a real implementation should use ec-canvas
+    // TODO: Replace with ec-canvas or wx-charts for visual line charts
+    // The chartData binding currently renders a plain table; a real implementation
+    // should use ec-canvas (echarts-for-weixin) or wx-charts for chart rendering.
     this.setData({ chartData: data })
   },
 

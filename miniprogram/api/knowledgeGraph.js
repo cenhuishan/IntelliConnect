@@ -53,6 +53,8 @@ function updateNode(id, name, des) {
 /**
  * Delete a node by id.
  * @param {number} id
+ * Note: `name` and `productId` are included to satisfy the backend @Valid constraint on
+ * KnowledgeGraphicNode; the server ignores them when deleting by id.
  */
 function deleteNode(id) {
   return request({
@@ -136,6 +138,8 @@ function addRelation(des, from, to) {
  * Delete a relation between two nodes.
  * @param {number} from
  * @param {number} to
+ * Note: `des` is included to satisfy the backend @Valid constraint on
+ * KnowledgeGraphicRelation; the server ignores it when deleting by from/to.
  */
 function deleteRelation(from, to) {
   return request({
