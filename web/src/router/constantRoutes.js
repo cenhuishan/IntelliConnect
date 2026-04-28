@@ -14,5 +14,5 @@ export const constantRoutes = [
     name:'NotFound',
     component:()=>import('@/views/error/404NotFound.vue')
   },
-  { path: '/:pathMatch(.*)*', redirect: '/404NotFound' },
+  { path: '/:pathMatch(.*)*', name: 'CatchAll', component: () => import('@/views/error/404NotFound.vue') },
 ]

@@ -17,19 +17,15 @@ const routes = [
     name: 'Register', 
     component: () => import('@/views/register/index.vue'),
   },
-  
-  // {
-  //   path: '/404NotFound',
-  //   name: 'NotFound',
-  //   component: () => import('@/views/error/404NotFound.vue'),
-  // },
-
-  // {
-  //   path: '/:pathMatch(.*)*',
-  //   name: 'NotFound',
-  //   component: () => import('@/views/error/404NotFound.vue'),
-  //   redirect: '/404NotFound',
-  // },
+  // Catch-all must be present from app start so that beforeEach receives the
+  // original navigation path (e.g. /knowledgeGraphic) before dynamic routes
+  // are registered via GENERATE_ROUTES.  Without this, Vue Router warns
+  // "No match found" and the navigation intent may be lost.
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'CatchAll',
+    component: () => import('@/views/error/404NotFound.vue'),
+  },
 ]
 
 const router = createRouter({
