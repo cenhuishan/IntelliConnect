@@ -242,11 +242,22 @@ function handleStopAddNewNode() {
 }
 
 function handleAddNewNode() {
-  addKnowledgeGraphicNode(newNodeForm).then(() => {
-    message.success('添加成功！')
-    getCurrentKnowledgeGraphic()
+  addKnowledgeGraphicNode(newNodeForm).then((res) => {
+    const { errorCode } = res.data
+    if (errorCode === 2001) {
+      router.push('/login')
+      return
+    }
+    if (errorCode === 200) {
+      message.success('添加成功！')
+      handleStopAddNewNode()
+      getCurrentKnowledgeGraphic()
+    } else {
+      message.error('添加失败！')
+    }
+  }).catch(() => {
+    message.error('添加失败！')
   })
-  handleStopAddNewNode()
 }
 
 function handleStartConnecting(e) {
@@ -343,10 +354,11 @@ function handleConnected() {
 function updateGraphicData() {
   if (!graphic.value) return
   let option = { ...baseOption }
-  const classifiedTypes = graphic.value.nodes.filter(
-    (node) => node.category !== undefined && node.category !== null
-  ).length
-  const TYPES = classifyNodes(graphic.value.nodes, graphic.value.relations) + classifiedTypes
+  // Reset any previously assigned categories so classifyNodes starts fresh
+  graphic.value.nodes.forEach((node) => {
+    node.category = undefined
+  })
+  const TYPES = classifyNodes(graphic.value.nodes, graphic.value.relations)
   const categories = []
   for (let i = 0; i < TYPES; i++) {
     categories.push(`type${i}`)
