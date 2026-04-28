@@ -1,0 +1,15 @@
+<view class="container">
+  <text class="section-title">事件告警</text>
+
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+  <view wx:elif="{{alarms.length === 0}}" class="empty-state">暂无告警事件</view>
+
+  <view wx:else>
+    <view class="alarm-item card" wx:for="{{alarms}}" wx:key="id">
+      <view class="alarm-top">
+        <text class="alarm-name">告警 ID: {{item.id}}</text>
+        <text class="alarm-event">事件 ID: {{item.eventId}}</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,48 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.logo-wrap {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo-text {
+  font-size: 56rpx;
+  font-weight: 700;
+  color: #1677ff;
+  display: block;
+}
+
+.logo-sub {
+  font-size: 28rpx;
+  color: #888;
+  margin-top: 12rpx;
+  display: block;
+}
+
+.loading-wrap,
+.error-wrap {
+  text-align: center;
+}
+
+.loading-tip {
+  color: #888;
+  font-size: 28rpx;
+}
+
+.error-msg {
+  color: #ff4d4f;
+  font-size: 28rpx;
+  margin-bottom: 32rpx;
+  display: block;
+}
+
+.btn-primary {
+  width: 400rpx;
+  margin: 0 auto;
+}

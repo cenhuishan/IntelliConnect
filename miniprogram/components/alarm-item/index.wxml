@@ -1,0 +1,7 @@
+<view class="alarm-item">
+  <view class="alarm-left">
+    <text class="alarm-id">告警 ID: {{alarm.id}}</text>
+    <text class="alarm-event">事件 ID: {{alarm.eventId}}</text>
+  </view>
+  <text class="alarm-badge">!</text>
+</view>

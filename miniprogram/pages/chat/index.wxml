@@ -1,0 +1,50 @@
+<view class="chat-page">
+  <!-- Header actions -->
+  <view class="chat-header">
+    <text class="chat-title">AI 助手</text>
+    <text class="clear-btn" bindtap="onClearChat">清空</text>
+  </view>
+
+  <!-- Message list -->
+  <scroll-view class="message-list" scroll-y scroll-into-view="{{scrollToId}}" scroll-with-animation>
+    <view wx:if="{{messages.length === 0}}" class="empty-chat">
+      <text>你好！我是你的 IoT 智能助手</text>
+      <text>可以询问设备状态或发送控制指令</text>
+    </view>
+
+    <view
+      wx:for="{{messages}}"
+      wx:key="id"
+      class="msg-wrap {{item.role === 'user' ? 'user-wrap' : 'ai-wrap'}}"
+      id="{{item.id}}"
+    >
+      <view class="bubble {{item.role === 'user' ? 'user-bubble' : 'ai-bubble'}}">
+        <text class="bubble-text">{{item.content}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{sending}}" class="msg-wrap ai-wrap">
+      <view class="bubble ai-bubble typing">
+        <text class="bubble-text">...</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Input bar -->
+  <view class="input-bar">
+    <input
+      class="msg-input"
+      placeholder="输入消息..."
+      value="{{inputText}}"
+      bindinput="onInputChange"
+      confirm-type="send"
+      bindconfirm="onSend"
+      disabled="{{sending}}"
+    />
+    <button
+      class="send-btn {{sending ? 'disabled' : ''}}"
+      bindtap="onSend"
+      disabled="{{sending}}"
+    >发送</button>
+  </view>
+</view>

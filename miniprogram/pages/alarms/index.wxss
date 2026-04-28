@@ -1,0 +1,19 @@
+.alarm-item {
+  border-left: 6rpx solid #ff4d4f;
+}
+
+.alarm-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alarm-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+}
+
+.alarm-event {
+  font-size: 24rpx;
+  color: #888;
+}

@@ -1,0 +1,46 @@
+.device-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 18rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  display: block;
+}
+
+.desc {
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6rpx;
+}
+
+.online {
+  font-size: 24rpx;
+  color: #52c41a;
+}
+
+.offline {
+  font-size: 24rpx;
+  color: #ff4d4f;
+}
+
+.chevron {
+  font-size: 32rpx;
+  color: #ccc;
+}

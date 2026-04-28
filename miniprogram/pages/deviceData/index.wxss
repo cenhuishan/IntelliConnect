@@ -1,0 +1,73 @@
+.device-name-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #222;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 28rpx;
+}
+
+.filter-label {
+  font-size: 28rpx;
+  color: #555;
+}
+
+.picker-val {
+  font-size: 28rpx;
+  color: #1677ff;
+}
+
+.range-row {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.range-btn {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx;
+  border-radius: 10rpx;
+  background: #fff;
+  color: #555;
+  font-size: 28rpx;
+  border: 2rpx solid #e8e8e8;
+}
+
+.range-btn.active {
+  background: #e6f4ff;
+  color: #1677ff;
+  border-color: #1677ff;
+}
+
+.table-header {
+  display: flex;
+  border-bottom: 2rpx solid #f0f0f0;
+  padding-bottom: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.table-row {
+  display: flex;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #f9f9f9;
+}
+
+.table-cell {
+  flex: 1;
+  font-size: 26rpx;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time-cell {
+  flex: 1.5;
+  font-size: 24rpx;
+  color: #888;
+}

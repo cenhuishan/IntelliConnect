@@ -1,0 +1,46 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.product-tag {
+  font-size: 24rpx;
+  color: #1677ff;
+  background: #e6f4ff;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.device-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  display: block;
+}
+
+.device-desc {
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 6rpx;
+  display: block;
+}
+
+.device-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+}
+
+.chevron {
+  font-size: 36rpx;
+  color: #ccc;
+}

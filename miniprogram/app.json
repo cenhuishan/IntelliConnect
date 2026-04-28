@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/products/index",
+    "pages/devices/index",
+    "pages/deviceData/index",
+    "pages/alarms/index",
+    "pages/chat/index",
+    "pages/login/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "创万联 IoT",
+    "navigationBarBackgroundColor": "#1677ff",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1677ff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/products/index",
+        "text": "产品",
+        "iconPath": "assets/icons/product.png",
+        "selectedIconPath": "assets/icons/product-active.png"
+      },
+      {
+        "pagePath": "pages/devices/index",
+        "text": "设备",
+        "iconPath": "assets/icons/device.png",
+        "selectedIconPath": "assets/icons/device-active.png"
+      },
+      {
+        "pagePath": "pages/alarms/index",
+        "text": "告警",
+        "iconPath": "assets/icons/alarm.png",
+        "selectedIconPath": "assets/icons/alarm-active.png"
+      },
+      {
+        "pagePath": "pages/chat/index",
+        "text": "智能",
+        "iconPath": "assets/icons/chat.png",
+        "selectedIconPath": "assets/icons/chat-active.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

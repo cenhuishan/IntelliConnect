@@ -1,0 +1,12 @@
+<view class="device-item" bindtap="onTap">
+  <view class="left">
+    <text class="name">{{device.name}}</text>
+    <text class="desc">{{device.description || '无描述'}}</text>
+  </view>
+  <view class="right">
+    <text class="{{device.online === 'connected' ? 'online' : 'offline'}}">
+      {{device.online === 'connected' ? '在线' : '离线'}}
+    </text>
+    <text class="chevron">›</text>
+  </view>
+</view>

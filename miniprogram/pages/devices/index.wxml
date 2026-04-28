@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="page-header">
+    <text class="section-title">设备列表</text>
+    <text wx:if="{{productName}}" class="product-tag">{{productName}}</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+
+  <view wx:elif="{{devices.length === 0}}" class="empty-state">
+    暂无设备，请先选择或绑定产品
+  </view>
+
+  <view wx:else>
+    <view
+      class="device-item card"
+      wx:for="{{devices}}"
+      wx:key="id"
+      bindtap="onDeviceTap"
+      data-name="{{item.name}}"
+    >
+      <view class="device-left">
+        <text class="device-name">{{item.name}}</text>
+        <text class="device-desc">{{item.description || '无描述'}}</text>
+      </view>
+      <view class="device-right">
+        <text class="{{item.online === 'connected' ? 'badge-online' : 'badge-offline'}}">
+          {{item.online === 'connected' ? '在线' : '离线'}}
+        </text>
+        <text class="chevron">›</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -51,6 +51,26 @@ mysql,redis,emqx和influxdb环境，安装详情请看官方文档。
 * 修改配置文件application.yaml(设置ddl-auto为update模式)
 * java -jar IntelliConnect-1.8-SNAPSHOT.jar
 
+## 项目模块结构
+
+| 目录 | 说明 |
+|------|------|
+| `src/` | 后端 Spring Boot 服务 |
+| `web/` | 管理端 Vue 3 前端 |
+| `miniprogram/` | 微信小程序前端（详见 [miniprogram/README.md](miniprogram/README.md)） |
+| `docker/` | Docker Compose 一键部署配置 |
+
+### 微信小程序
+
+`miniprogram/` 目录包含完整的微信小程序客户端，与后端 `/api/wx/v1` 接口配合，提供：
+- 产品绑定/切换
+- 设备列表与在线状态
+- 设备历史数据查询
+- 告警事件查看（支持下拉刷新）
+- AI 智能助手对话
+
+使用方式参见 [miniprogram/README.md](miniprogram/README.md)。
+
 ## 功能模块 
 
 | 功能模块                 | 状态 | 描述                              |

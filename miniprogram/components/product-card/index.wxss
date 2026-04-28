@@ -1,0 +1,33 @@
+.product-card {
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 18rpx;
+  border: 2rpx solid transparent;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.product-card.active {
+  border-color: #1677ff;
+}
+
+.name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #222;
+  display: block;
+}
+
+.id {
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.active-tag {
+  font-size: 22rpx;
+  color: #1677ff;
+  display: block;
+  margin-top: 4rpx;
+}

@@ -1,0 +1,38 @@
+<view class="container">
+  <!-- Summary cards -->
+  <view class="summary-row">
+    <view class="summary-card">
+      <text class="summary-num">{{productCount}}</text>
+      <text class="summary-label">绑定产品</text>
+    </view>
+    <view class="summary-card">
+      <text class="summary-num">{{deviceTotal}}</text>
+      <text class="summary-label">设备总数</text>
+    </view>
+    <view class="summary-card">
+      <text class="summary-num online">{{deviceOnline}}</text>
+      <text class="summary-label">在线设备</text>
+    </view>
+  </view>
+
+  <!-- Quick navigation -->
+  <view class="section-title">快速导航</view>
+  <view class="nav-grid">
+    <view class="nav-item" bindtap="goToDevices">
+      <text class="nav-icon">📡</text>
+      <text class="nav-label">设备管理</text>
+    </view>
+    <view class="nav-item" bindtap="goToAlarms">
+      <text class="nav-icon">🔔</text>
+      <text class="nav-label">事件告警</text>
+    </view>
+    <view class="nav-item" bindtap="goToChat">
+      <text class="nav-icon">🤖</text>
+      <text class="nav-label">AI 助手</text>
+    </view>
+    <view class="nav-item" bindtap="() => wx.switchTab({url:'/pages/products/index'})">
+      <text class="nav-icon">📦</text>
+      <text class="nav-label">产品列表</text>
+    </view>
+  </view>
+</view>

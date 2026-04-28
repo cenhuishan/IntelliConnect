@@ -1,0 +1,15 @@
+<view class="container login-page">
+  <view class="logo-wrap">
+    <text class="logo-text">创万联 IoT</text>
+    <text class="logo-sub">智能物联网平台</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text class="loading-tip">正在登录，请稍候...</text>
+  </view>
+
+  <view wx:if="{{error}}" class="error-wrap">
+    <text class="error-msg">{{error}}</text>
+    <button class="btn-primary" bindtap="onRetry">重试</button>
+  </view>
+</view>

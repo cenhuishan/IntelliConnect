@@ -1,0 +1,48 @@
+<view class="container">
+  <view class="header-row">
+    <text class="section-title">我的产品</text>
+    <button class="btn-add" bindtap="openBindModal">+ 绑定</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty-state">加载中...</view>
+
+  <view wx:elif="{{products.length === 0}}" class="empty-state">
+    暂无绑定产品，请点击右上角绑定
+  </view>
+
+  <view wx:else>
+    <view
+      class="product-item {{item.id === activeProductId ? 'active' : ''}}"
+      wx:for="{{products}}"
+      wx:key="id"
+      bindtap="onSelectProduct"
+      data-id="{{item.id}}"
+    >
+      <view class="product-info">
+        <text class="product-name">{{item.productName}}</text>
+        <text class="product-id">ID: {{item.id}}</text>
+        <text wx:if="{{item.id === activeProductId}}" class="active-tag">当前激活</text>
+      </view>
+      <view class="product-actions">
+        <button
+          class="btn-unbind"
+          catchtap="onUnbind"
+          data-name="{{item.productName}}"
+          data-key="{{item.keyvalue}}"
+        >解绑</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Bind modal -->
+  <view class="modal-mask" wx:if="{{showBindModal}}" bindtap="closeBindModal"></view>
+  <view class="modal" wx:if="{{showBindModal}}">
+    <text class="modal-title">绑定产品</text>
+    <input class="modal-input" placeholder="产品名称" bindinput="onBindNameInput" value="{{bindForm.productName}}" />
+    <input class="modal-input" placeholder="产品密钥" bindinput="onBindKeyInput" value="{{bindForm.productKey}}" />
+    <view class="modal-footer">
+      <button class="btn-ghost" bindtap="closeBindModal">取消</button>
+      <button class="btn-primary" bindtap="onConfirmBind">确认</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,37 @@
+.alarm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 14rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 18rpx;
+  border-left: 6rpx solid #ff4d4f;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.alarm-id {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #222;
+  display: block;
+}
+
+.alarm-event {
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.alarm-badge {
+  background: #ff4d4f;
+  color: #fff;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 44rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+}

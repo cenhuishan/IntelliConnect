@@ -1,0 +1,5 @@
+<view class="product-card {{active ? 'active' : ''}}" bindtap="onTap">
+  <text class="name">{{product.productName}}</text>
+  <text class="id">ID: {{product.id}}</text>
+  <text wx:if="{{active}}" class="active-tag">当前激活</text>
+</view>
