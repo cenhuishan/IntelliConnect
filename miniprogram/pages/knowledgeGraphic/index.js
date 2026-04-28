@@ -8,6 +8,7 @@ const {
   knowledgeGraphicForgetToggle,
   getKnowledgeGraphicForgetEpoch, updateKnowledgeGraphicForgetEpoch,
 } = require('../../api/knowledgeGraphic');
+const { getToken } = require('../../utils/storage');
 const { getProductList } = require('../../api/product');
 const { showToast, showLoading, hideLoading, showConfirm } = require('../../utils/util');
 
@@ -37,7 +38,10 @@ Page({
     form: {}
   },
 
-  onShow() { this.loadProducts(); },
+  onShow() {
+    if (!getToken()) return; // not yet authenticated; app.js will redirect to login
+    this.loadProducts();
+  },
 
   async loadProducts() {
     this.setData({ productLoading: true });

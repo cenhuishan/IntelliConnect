@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getAgentMemory = (data) =>
   request({
     url: '/api/v2/memory',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const putAgentMemory = (data) =>
@@ -15,7 +15,7 @@ export const getAgentMemory = (data) =>
       url: '/api/v2/memory',
       method: 'put',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getAgentMemory = (data) =>
         url: '/api/v2/memory',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })

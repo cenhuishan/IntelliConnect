@@ -32,6 +32,7 @@ function request({ url, method = 'GET', data, params, header = {} }) {
         if (resData && resData.errorCode === 2001) {
           wx.removeStorageSync('access-token');
           wx.reLaunch({ url: '/pages/login/index' });
+          reject(resData);
           return;
         }
         resolve(resData);
@@ -63,6 +64,7 @@ function uploadFile({ url, filePath, name, formData = {}, header = {} }) {
           if (data && data.errorCode === 2001) {
             wx.removeStorageSync('access-token');
             wx.reLaunch({ url: '/pages/login/index' });
+            reject(data);
             return;
           }
           resolve(data);

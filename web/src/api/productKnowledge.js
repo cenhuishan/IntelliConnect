@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
  export const getKnowledgeChat = (data) =>
   request({
     url: '/api/v2/knowledgeChat',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postKnowledgeChatRecall = (data) =>
@@ -15,7 +15,7 @@ const token = store.getters['auth/token']
     url: '/api/v2/knowledgeChatRecall',
     method: 'post',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
     data
   })
@@ -27,7 +27,7 @@ const token = store.getters['auth/token']
     url: '/api/v2/knowledgeChat',
     method: 'post',
     headers: {
-      'Authorization': token,
+      'Authorization': getToken(),
     },
     params, 
     data: formData
@@ -38,7 +38,7 @@ const token = store.getters['auth/token']
         url: '/api/v2/knowledgeChat',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })
