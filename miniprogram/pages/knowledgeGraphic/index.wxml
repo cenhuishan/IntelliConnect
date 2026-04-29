@@ -52,6 +52,9 @@
     <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="onTabChange" data-idx="1">
       关系（{{relations.length}}）
     </view>
+    <view class="tab-item {{activeTab === 2 ? 'active' : ''}}" bindtap="onTabChange" data-idx="2">
+      图谱
+    </view>
   </view>
 
   <!-- Loading indicator -->
@@ -193,6 +196,30 @@
           </view>
         </view>
       </view>
+    </view>
+  </block>
+
+  <!-- ── GRAPH TAB ──────────────────────────────────────────────────────── -->
+  <block wx:elif="{{activeTab === 2}}">
+    <view class="graph-wrap card">
+      <canvas type="2d" id="kg-canvas" class="kg-canvas" bindtap="onCanvasTap"></canvas>
+    </view>
+    <view wx:if="{{graphSelectedNode}}" class="section-card graph-info-panel">
+      <view class="graph-node-header">
+        <text class="graph-node-name">{{graphSelectedNode}}</text>
+        <text class="graph-node-hint">点击空白处取消选中</text>
+      </view>
+      <view wx:if="{{graphSelectedNodeDes}}" class="graph-node-des">
+        <text class="info-text">{{graphSelectedNodeDes}}</text>
+      </view>
+      <view wx:if="{{graphSelectedNodeRelations.length > 0}}">
+        <text class="graph-section-label">关联关系</text>
+        <view wx:for="{{graphSelectedNodeRelations}}" wx:key="id" wx:for-item="rel" class="graph-rel-row">
+          <text class="graph-rel-text">{{rel.from}} → {{rel.to}}</text>
+          <text wx:if="{{rel.des}}" class="graph-rel-des">{{rel.des}}</text>
+        </view>
+      </view>
+      <view wx:else class="empty-tip-inline" style="padding: 16rpx 0;">该节点暂无关联关系</view>
     </view>
   </block>
 

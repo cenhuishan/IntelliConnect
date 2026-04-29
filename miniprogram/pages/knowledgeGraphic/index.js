@@ -70,6 +70,11 @@ Page({
     addRelFromIndex: 0,
     addRelToIndex: 1,
     addRelDes: '',
+
+    // graph view
+    graphSelectedNode: null,
+    graphSelectedNodeDes: '',
+    graphSelectedNodeRelations: [],
   },
 
   onShow() {
@@ -116,6 +121,9 @@ Page({
       expandedRelationIdx: null,
       editingNodeName: null,
       editingRelationIdx: null,
+      graphSelectedNode: null,
+      graphSelectedNodeDes: '',
+      graphSelectedNodeRelations: [],
     });
     this.afterProductSelected();
   },
@@ -146,6 +154,9 @@ Page({
         const relations = Array.isArray(res.data.relations) ? res.data.relations : [];
         const nodeNames = nodes.map(n => n.name);
         this.setData({ nodes, nodeNames, relations });
+        if (this.data.activeTab === 2) {
+          setTimeout(() => this.drawGraph(), 50);
+        }
       }
     } catch (e) {
       showToast('加载失败');
@@ -273,7 +284,13 @@ Page({
       expandedRelationIdx: null,
       editingNodeName: null,
       editingRelationIdx: null,
+      graphSelectedNode: null,
+      graphSelectedNodeDes: '',
+      graphSelectedNodeRelations: [],
     });
+    if (idx === 2) {
+      setTimeout(() => this.drawGraph(), 100);
+    }
   },
 
   // ─── Node: expand/collapse ────────────────────────────────────────────────
@@ -642,11 +659,173 @@ Page({
   // ─── FAB ──────────────────────────────────────────────────────────────────
 
   onFab() {
-    if (this.data.activeTab === 0) {
-      this.onShowAddNodeModal();
-    } else {
+    const { activeTab } = this.data;
+    if (activeTab === 1) {
       this.onShowAddRelationModal();
+    } else {
+      this.onShowAddNodeModal();
     }
+  },
+
+  // ─── Graph canvas ─────────────────────────────────────────────────────────
+
+  drawGraph() {
+    const { nodes, relations, graphSelectedNode } = this.data;
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#kg-canvas').fields({ node: true, size: true }).exec((res) => {
+      if (!res || !res[0] || !res[0].node) return;
+      const canvas = res[0].node;
+      const ctx = canvas.getContext('2d');
+      const W = res[0].width;
+      const H = res[0].height;
+      let dpr = 2;
+      try {
+        const info = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+        dpr = info.pixelRatio || 2;
+      } catch (e) {}
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, W, H);
+
+      if (nodes.length === 0) {
+        ctx.fillStyle = '#bbb';
+        ctx.font = '14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('暂无节点，点击右下角 + 添加', W / 2, H / 2);
+        return;
+      }
+
+      const nodeR = nodes.length <= 8 ? 28 : Math.max(14, Math.floor(28 * 8 / nodes.length));
+      const cx = W / 2;
+      const cy = H / 2;
+      const layoutR = Math.min(W, H) / 2 - nodeR - 24;
+      const positions = {};
+
+      if (nodes.length === 1) {
+        positions[nodes[0].name] = { x: cx, y: cy };
+      } else {
+        nodes.forEach((node, i) => {
+          const angle = (2 * Math.PI * i / nodes.length) - Math.PI / 2;
+          positions[node.name] = {
+            x: cx + layoutR * Math.cos(angle),
+            y: cy + layoutR * Math.sin(angle),
+          };
+        });
+      }
+
+      // Draw edges
+      relations.forEach(rel => {
+        if (rel.from === rel.to) return;
+        const from = positions[rel.from];
+        const to = positions[rel.to];
+        if (!from || !to) return;
+        const isHighlighted = graphSelectedNode &&
+          (rel.from === graphSelectedNode || rel.to === graphSelectedNode);
+        const lineColor = isHighlighted ? '#1890ff' : '#c0d9f0';
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 0.1) return;
+        const nx = dx / dist;
+        const ny = dy / dist;
+        const sx = from.x + nx * nodeR;
+        const sy = from.y + ny * nodeR;
+        const ex = to.x - nx * nodeR;
+        const ey = to.y - ny * nodeR;
+
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = isHighlighted ? 2 : 1.5;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+
+        // Arrowhead
+        const arrowLen = 10;
+        const arrowAngle = Math.PI / 6;
+        const angle = Math.atan2(dy, dx);
+        ctx.fillStyle = lineColor;
+        ctx.beginPath();
+        ctx.moveTo(ex, ey);
+        ctx.lineTo(
+          ex - arrowLen * Math.cos(angle - arrowAngle),
+          ey - arrowLen * Math.sin(angle - arrowAngle)
+        );
+        ctx.lineTo(
+          ex - arrowLen * Math.cos(angle + arrowAngle),
+          ey - arrowLen * Math.sin(angle + arrowAngle)
+        );
+        ctx.closePath();
+        ctx.fill();
+
+        // Edge label
+        if (rel.des) {
+          const midX = (from.x + to.x) / 2;
+          const midY = (from.y + to.y) / 2;
+          const perpX = -ny * 12;
+          const perpY = nx * 12;
+          ctx.fillStyle = isHighlighted ? '#1890ff' : '#aaa';
+          ctx.font = '11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const label = rel.des.length > 8 ? rel.des.slice(0, 8) + '…' : rel.des;
+          ctx.fillText(label, midX + perpX, midY + perpY);
+        }
+      });
+
+      // Draw nodes
+      nodes.forEach(node => {
+        const pos = positions[node.name];
+        if (!pos) return;
+        const isSelected = graphSelectedNode === node.name;
+        if (isSelected) {
+          ctx.shadowColor = 'rgba(24, 144, 255, 0.4)';
+          ctx.shadowBlur = 12;
+        }
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, nodeR, 0, 2 * Math.PI);
+        ctx.fillStyle = isSelected ? '#1890ff' : '#e6f4ff';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = isSelected ? '#096dd9' : '#91d5ff';
+        ctx.lineWidth = isSelected ? 2.5 : 1.5;
+        ctx.stroke();
+        ctx.fillStyle = isSelected ? '#fff' : '#1a6abb';
+        ctx.font = `bold ${nodeR >= 22 ? 12 : 10}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const label = node.name.length > 5 ? node.name.slice(0, 5) + '…' : node.name;
+        ctx.fillText(label, pos.x, pos.y);
+      });
+
+      this._graphNodePositions = positions;
+      this._graphNodeR = nodeR;
+    });
+  },
+
+  onCanvasTap(e) {
+    const { x, y } = e.detail;
+    const positions = this._graphNodePositions;
+    const nodeR = this._graphNodeR || 28;
+    if (!positions) return;
+    let tappedNode = null;
+    for (const [name, pos] of Object.entries(positions)) {
+      const dist = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);
+      if (dist <= nodeR) {
+        tappedNode = name;
+        break;
+      }
+    }
+    const { nodes, relations } = this.data;
+    const node = nodes.find(n => n.name === tappedNode);
+    const graphSelectedNodeDes = node ? (node.des || '') : '';
+    const graphSelectedNodeRelations = tappedNode
+      ? relations.filter(r => r.from === tappedNode || r.to === tappedNode)
+      : [];
+    this.setData({ graphSelectedNode: tappedNode, graphSelectedNodeDes, graphSelectedNodeRelations });
+    this.drawGraph();
   },
 
   noop() {},

@@ -60,3 +60,17 @@
 .add-attr-form { border: 1rpx solid #e0eeff; border-radius: 10rpx; padding: 16rpx; background: #f8faff; margin-bottom: 8rpx; }
 .attr-input { width: 100%; font-size: 26rpx; border: 1rpx solid #d9d9d9; border-radius: 8rpx; padding: 10rpx 16rpx; box-sizing: border-box; margin-bottom: 12rpx; }
 .add-attr-btns { display: flex; gap: 12rpx; justify-content: flex-end; }
+
+/* ── Graph canvas view ───────────────────────────────────────────────── */
+.graph-wrap { position: relative; border-radius: 12rpx; overflow: hidden; padding: 0; }
+.kg-canvas { width: 100%; height: 600rpx; display: block; background: #fafeff; }
+.graph-info-panel { margin-top: 0; }
+.graph-node-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12rpx; }
+.graph-node-name { font-size: 30rpx; font-weight: 600; color: #333; }
+.graph-node-hint { font-size: 22rpx; color: #bbb; }
+.graph-node-des { margin-bottom: 12rpx; }
+.graph-section-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 8rpx; margin-top: 8rpx; }
+.graph-rel-row { padding: 12rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.graph-rel-row:last-child { border-bottom: none; }
+.graph-rel-text { font-size: 26rpx; color: #333; display: block; }
+.graph-rel-des { font-size: 24rpx; color: #888; margin-top: 4rpx; display: block; }
