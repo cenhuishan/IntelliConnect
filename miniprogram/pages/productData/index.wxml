@@ -1,0 +1,81 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无属性，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.jsonKey}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <view class="item-info">
+        <text class="info-text">描述: {{item.description}}</text>
+        <text class="info-text">类型: {{item.type}}</text>
+        <text class="info-text">存储: {{item.storageType}}</text>
+        <text class="info-text">读写: {{item.rRw}}</text>
+        <text class="info-text" wx:if="{{item.unit}}">单位: {{item.unit}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加属性</text>
+      <scroll-view scroll-y style="max-height:65vh">
+        <view class="input-item">
+          <text class="input-label">JSON Key</text>
+          <input class="input-field" placeholder="JSON Key" data-field="jsonKey" bindinput="onFormInput" value="{{form.jsonKey}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">描述</text>
+          <input class="input-field" placeholder="属性描述" data-field="description" bindinput="onFormInput" value="{{form.description}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">物模型</text>
+          <picker mode="selector" range="{{modelNames}}" bindchange="onModelChange">
+            <text class="picker-text">{{modelNames.length ? modelNames[0] : '暂无物模型'}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">数据类型</text>
+          <picker mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+            <text class="picker-text">{{form.type}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">存储类型</text>
+          <picker mode="selector" range="{{storageOptions}}" bindchange="onStorageChange">
+            <text class="picker-text">{{form.storageType}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">读写属性</text>
+          <picker mode="selector" range="{{rrwOptions}}" bindchange="onRrwChange">
+            <text class="picker-text">{{form.rRw}}</text>
+          </picker>
+        </view>
+        <view class="input-item">
+          <text class="input-label">单位</text>
+          <input class="input-field" placeholder="如: °C" data-field="unit" bindinput="onFormInput" value="{{form.unit}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">最大值</text>
+          <input class="input-field" placeholder="max" type="digit" data-field="max" bindinput="onFormInput" value="{{form.max}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">最小值</text>
+          <input class="input-field" placeholder="min" type="digit" data-field="min" bindinput="onFormInput" value="{{form.min}}" />
+        </view>
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">步长</text>
+          <input class="input-field" placeholder="step" type="digit" data-field="step" bindinput="onFormInput" value="{{form.step}}" />
+        </view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

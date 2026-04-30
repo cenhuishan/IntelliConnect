@@ -51,6 +51,7 @@ async function initNodes(){
     await router.push("/login");
     return;
   }else if(res1.data.errorCode !== 200){
+    loading.value = false;
     emit("cancel", {
       message: "Data error"
     });
@@ -65,6 +66,7 @@ async function initNodes(){
     await router.push("/login");
     return;
   }else if(res2.data.errorCode !== 200){
+    loading.value = false;
     emit("cancel", {
       message: "Data error"
     });

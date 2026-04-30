@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="action-row">
+    <button class="btn btn-primary action-btn" bindtap="onUpload">上传知识文件</button>
+    <button class="btn btn-default action-btn" bindtap="onShowRecall">知识召回测试</button>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无知识文件" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.filename}}</text>
+        <view class="item-actions">
+          <view class="tag {{item.status === 'ready' ? 'tag-success' : 'tag-default'}}">{{item.status}}</view>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+      <text class="info-text">产品ID: {{item.productId}}</text>
+    </view>
+  </view>
+
+  <!-- 知识召回测试弹窗 -->
+  <view class="modal-mask" wx:if="{{showRecallModal}}" bindtap="onCloseRecall">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">知识召回测试</text>
+      <view class="input-item">
+        <text class="input-label">查询内容</text>
+        <textarea class="input-field textarea-field" placeholder="输入查询内容" bindinput="onRecallInput" value="{{recallContent}}" />
+      </view>
+      <view wx:if="{{recallResult}}" class="recall-result">
+        <text class="result-text">{{recallResult}}</text>
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseRecall">关闭</button>
+        <button class="btn btn-primary" bindtap="onRecall">召回</button>
+      </view>
+    </view>
+  </view>
+</view>

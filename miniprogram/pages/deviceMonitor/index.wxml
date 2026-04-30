@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="card filter-card">
+    <text class="section-title-text">设备数据查询</text>
+
+    <view class="input-item">
+      <text class="input-label">选择产品</text>
+      <picker mode="selector" range="{{productNames}}" bindchange="onProductChange"
+              disabled="{{productNames.length === 0}}">
+        <text class="picker-text">{{selectedProductIdx >= 0 ? productNames[selectedProductIdx] : '请选择产品'}}</text>
+      </picker>
+    </view>
+
+    <view class="input-item">
+      <text class="input-label">选择设备</text>
+      <picker mode="selector" range="{{deviceNames}}" bindchange="onDeviceChange"
+              disabled="{{deviceNames.length === 0}}">
+        <text class="picker-text">{{selectedDeviceIdx >= 0 ? deviceNames[selectedDeviceIdx] : '请选择设备'}}</text>
+      </picker>
+    </view>
+
+    <view class="input-item" style="border-bottom:none">
+      <text class="input-label">属性 Key</text>
+      <picker mode="selector" range="{{dataKeys}}" bindchange="onKeyChange"
+              disabled="{{dataKeys.length === 0}}">
+        <text class="picker-text">{{selectedKeyIdx >= 0 ? dataKeys[selectedKeyIdx] : '请选择属性'}}</text>
+      </picker>
+    </view>
+
+    <button class="btn btn-primary query-btn" bindtap="onQuery" loading="{{loading}}">查询数据</button>
+  </view>
+
+  <view class="card" wx:if="{{deviceData.length > 0}}">
+    <text class="section-title-text">查询结果</text>
+    <view class="data-row" wx:for="{{deviceData}}" wx:key="key">
+      <text class="data-key">{{item.key}}</text>
+      <text class="data-val">{{item.value}}</text>
+    </view>
+  </view>
+  <empty-view wx:elif="{{!loading}}" text="请选择产品和设备后查询" />
+</view>

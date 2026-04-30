@@ -1,0 +1,7 @@
+.upload-area { display: flex; flex-direction: column; align-items: center; padding: 40rpx; cursor: pointer; }
+.upload-icon { font-size: 60rpx; margin-bottom: 12rpx; }
+.upload-text { font-size: 28rpx; color: #1890ff; }
+.item-header { display: flex; justify-content: space-between; align-items: center; }
+.item-name { font-size: 28rpx; font-weight: 600; color: #333; flex: 1; }
+.action-del { font-size: 26rpx; color: #ff4d4f; margin-left: 16rpx; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }

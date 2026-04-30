@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getXiaoZhiManager = (data) =>
   request({
     url: '/api/v2/xiaozhi/otaManage',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postXiaoZhiManager = (data) =>
@@ -15,7 +15,7 @@ export const getXiaoZhiManager = (data) =>
       url: '/api/v2/xiaozhi/otaManage',
       method: 'post',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getXiaoZhiManager = (data) =>
             url: '/api/v2/xiaozhi/otaManage',
             method: 'put',
             headers: {
-                'Authorization': token
+                'Authorization': getToken()
             },
             params
         })
@@ -33,7 +33,7 @@ export const getXiaoZhiManager = (data) =>
         url: '/api/v2/xiaozhi/otaManage',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
       })

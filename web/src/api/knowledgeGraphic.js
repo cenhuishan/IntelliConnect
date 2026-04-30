@@ -1,14 +1,14 @@
 import request from '@/utils/request';
 import store from "@/store";
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 
 export const queryKnowledgeGraphic = (params) => request({
     url: "/api/v2/kg/graphic",
     method: "get",
     params: params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -17,7 +17,7 @@ export const addKnowledgeGraphicNode = (data) => request({
     method: "post",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -26,7 +26,7 @@ export const deleteKnowledgeGraphicNode = (data) => request({
     method: "delete",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -35,7 +35,7 @@ export const updateKnowledgeGraphicNode = (data) => request({
     method: "put",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -44,7 +44,7 @@ export const getProductNodes = (params) => request({
     method: "get",
     params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -53,7 +53,7 @@ export const getNodeByName = (params) => request({
     method: "get",
     params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -62,7 +62,7 @@ export const getNodeInfo = (params) => request({
     method: "get",
     params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -71,7 +71,7 @@ export const getNodeAttributes = (params) => request({
     method: "get",
     params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -80,7 +80,7 @@ export const addNodeAttribute = (data) => request({
     method: "post",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -89,7 +89,7 @@ export const deleteNodeAttribute = (data) => request({
     method: "delete",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -98,7 +98,7 @@ export const addRelation = (data) => request({
     method: "post",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -107,7 +107,7 @@ export const deleteRelation = (data) => request({
     method: "delete",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -116,7 +116,7 @@ export const updateRelation = (data) => request({
     method: "put",
     data,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -125,7 +125,7 @@ export const getRelationByNodes = (params) => request({
     method: "get",
     params,
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
     }
 })
 
@@ -143,7 +143,7 @@ export const enableKnowledgeGraphic = (params) =>
       des: 'Knowledge graph toggle',
     },
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -161,7 +161,7 @@ export const disabledKnowledgeGraphic = (params) =>
       des: 'Knowledge graph toggle',
     },
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -171,7 +171,7 @@ export const getKnowledgeGraphicState = (params) =>
     method: 'get',
     params,
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -188,7 +188,7 @@ export const addKnowledgeGraphicToggleConfig = (data) => request({
     des: "Knowledge graph toggle"
   },
   headers: {
-    Authorization: token
+    Authorization: getToken()
   },
 })
 
@@ -198,7 +198,7 @@ export const getKnowledgeGraphicForgetState = (params) =>
     method: 'get',
     params,
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -216,7 +216,7 @@ export const addKnowledgeGraphicForgetToggleConfig = (data) =>
       des: 'Knowledge graph forget toggle',
     },
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -233,7 +233,7 @@ export const knowledgeGraphicForgetToggle = (data) =>
       des: 'Knowledge graph forget toggle',
     },
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -243,7 +243,7 @@ export const getKnowledgeGraphicForgetEpoch = (params) =>
     method: 'get',
     params,
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })
 
@@ -260,6 +260,6 @@ export const updateKnowledgeGraphicForgetEpoch = (data) =>
       des: 'Knowledge graph forget epoch',
     },
     headers: {
-      Authorization: token,
+      Authorization: getToken(),
     },
   })

@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="card product-info">
+    <text class="product-name">{{productName}}</text>
+    <text class="product-id">ID: {{productId}}</text>
+  </view>
+
+  <view class="menu-grid">
+    <view class="menu-item card" wx:for="{{menus}}" wx:key="page"
+          bindtap="onMenuTap" data-page="{{item.page}}">
+      <text class="menu-icon">{{item.icon}}</text>
+      <text class="menu-title">{{item.title}}</text>
+    </view>
+  </view>
+</view>

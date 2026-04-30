@@ -1,0 +1,26 @@
+<view class="login-container">
+  <view class="logo-area">
+    <text class="logo-icon">🔗</text>
+    <text class="logo-title">IntelliConnect</text>
+    <text class="logo-subtitle">智能物联网平台</text>
+  </view>
+
+  <view class="form-card">
+    <view class="input-item">
+      <text class="input-label">用户名</text>
+      <input class="input-field" placeholder="请输入用户名" value="{{username}}" bindinput="onUsernameInput" />
+    </view>
+    <view class="input-item" style="border-bottom:none">
+      <text class="input-label">密码</text>
+      <input class="input-field" placeholder="请输入密码" value="{{password}}" bindinput="onPasswordInput" password="{{true}}" />
+    </view>
+  </view>
+
+  <button class="btn btn-primary login-btn" bindtap="onLogin" loading="{{loading}}">登 录</button>
+
+  <view class="link-area">
+    <text class="link-text" bindtap="goRegister">注册账号</text>
+    <text class="link-divider">|</text>
+    <text class="link-text" bindtap="goForgotPassword">忘记密码</text>
+  </view>
+</view>

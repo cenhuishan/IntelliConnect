@@ -1,0 +1,73 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/register/index",
+    "pages/dashboard/index",
+    "pages/product/index",
+    "pages/productDevice/index",
+    "pages/productModel/index",
+    "pages/productData/index",
+    "pages/productFunction/index",
+    "pages/productEvent/index",
+    "pages/productEventData/index",
+    "pages/productRole/index",
+    "pages/productRouterSet/index",
+    "pages/agentMemory/index",
+    "pages/agentLongMemory/index",
+    "pages/productKnowledge/index",
+    "pages/productMcp/index",
+    "pages/productSkills/index",
+    "pages/productAsr/index",
+    "pages/productLlmModel/index",
+    "pages/llmProviderInformation/index",
+    "pages/productOta/index",
+    "pages/productOtaPassive/index",
+    "pages/productOtaPassiveXiaoZhi/index",
+    "pages/xiaoZhi/index",
+    "pages/alarmEvent/index",
+    "pages/timeSchedule/index",
+    "pages/deviceMonitor/index",
+    "pages/knowledgeGraphic/index",
+    "pages/setting/index",
+    "pages/about/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1890ff",
+    "navigationBarTitleText": "IntelliConnect",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1890ff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/dashboard/index",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/product/index",
+        "text": "产品",
+        "iconPath": "assets/icons/product.png",
+        "selectedIconPath": "assets/icons/product-active.png"
+      },
+      {
+        "pagePath": "pages/deviceMonitor/index",
+        "text": "监控",
+        "iconPath": "assets/icons/monitor.png",
+        "selectedIconPath": "assets/icons/monitor-active.png"
+      },
+      {
+        "pagePath": "pages/setting/index",
+        "text": "设置",
+        "iconPath": "assets/icons/setting.png",
+        "selectedIconPath": "assets/icons/setting-active.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

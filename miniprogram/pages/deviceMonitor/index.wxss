@@ -1,0 +1,10 @@
+.filter-card { }
+.filter-row { display: flex; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.filter-label { width: 140rpx; font-size: 28rpx; color: #666; flex-shrink: 0; }
+.picker-box { flex: 1; }
+.picker-text { font-size: 28rpx; color: #333; }
+.query-btn { margin-top: 24rpx; }
+.section-label { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.data-item { display: flex; justify-content: space-between; padding: 12rpx 0; border-bottom: 1rpx solid #f5f6fa; }
+.data-key { font-size: 26rpx; color: #666; }
+.data-value { font-size: 26rpx; color: #333; font-weight: 500; }

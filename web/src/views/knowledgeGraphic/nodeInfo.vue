@@ -113,7 +113,7 @@ function handleDeleteNode(){
   let deleteNodeForm = {...nodeInfo.value};
   deleteKnowledgeGraphicNode(deleteNodeForm).then(res=>{
     const { errorCode } = res.data;
-    if(errorCode === 20001) router.push("/login");
+    if(errorCode === 2001) router.push("/login");
     if(errorCode === 200) {
       message.success("删除成功");
       emit("deleteNode");

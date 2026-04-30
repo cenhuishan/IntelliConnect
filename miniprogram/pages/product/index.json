@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "产品管理",
+  "usingComponents": {
+    "empty-view": "../../components/empty-view/empty-view"
+  }
+}

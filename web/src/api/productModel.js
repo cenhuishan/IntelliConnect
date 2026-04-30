@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getproductModel = (data) =>
   request({
     url: '/api/v2/ProductModel',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postProductModel = (data) =>
@@ -15,7 +15,7 @@ export const getproductModel = (data) =>
       url: '/api/v2/ProductModel',
       method: 'post',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getproductModel = (data) =>
         url: '/api/v2/ProductModel',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
       })

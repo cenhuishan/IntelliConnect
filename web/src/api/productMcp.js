@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getMcpServer = (data) =>
   request({
     url: '/api/v2/mcpServer',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postMcpServer = (data) =>
@@ -15,7 +15,7 @@ export const getMcpServer = (data) =>
       url: '/api/v2/mcpServer',
       method: 'post',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getMcpServer = (data) =>
         url: '/api/v2/mcpServer',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })

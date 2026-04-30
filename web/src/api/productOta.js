@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
  export const otaList = (data) =>
   request({
     url: '/api/v2/otaList',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const otaEnable = (params) =>
@@ -15,7 +15,7 @@ const token = store.getters['auth/token']
     url: 'api/v2/otaEnable',
     method: 'post',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
     params
   })
@@ -27,7 +27,7 @@ const token = store.getters['auth/token']
     url: '/api/v2/otaUpload',
     method: 'post',
     headers: {
-      'Authorization': token,
+      'Authorization': getToken(),
     },
     params, 
     data: formData
@@ -38,7 +38,7 @@ const token = store.getters['auth/token']
         url: '/api/v2/otaDelete',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })

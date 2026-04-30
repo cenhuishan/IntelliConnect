@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getLlmProviderInformation = (data) =>
   request({
     url: '/api/v2/llmProviderInformation',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postLlmProviderInformation = (data) =>
@@ -15,7 +15,7 @@ export const getLlmProviderInformation = (data) =>
       url: '/api/v2/llmProviderInformation',
       method: 'post',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getLlmProviderInformation = (data) =>
         url: '/api/v2/llmProviderInformation',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })

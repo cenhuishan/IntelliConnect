@@ -1,0 +1,42 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无LLM模型配置，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.modelName}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <view class="item-info">
+        <text class="info-text">供应商ID: {{item.providerId}}</text>
+        <text class="info-text" wx:if="{{item.toolsId}}">工具集ID: {{item.toolsId}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加LLM模型</text>
+      <view class="input-item">
+        <text class="input-label">模型名称</text>
+        <input class="input-field" placeholder="如: qwen3-8b" data-field="modelName" bindinput="onFormInput" value="{{form.modelName}}" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">供应商</text>
+        <picker mode="selector" range="{{providerNames}}" bindchange="onProviderChange">
+          <text class="picker-text">{{providerNames.length ? providerNames[0] : '暂无供应商'}}</text>
+        </picker>
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">工具集ID</text>
+        <input class="input-field" placeholder="toolsId（可选）" type="number" data-field="toolsId" bindinput="onFormInput" value="{{form.toolsId}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

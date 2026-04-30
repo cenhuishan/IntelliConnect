@@ -1,0 +1,36 @@
+<view class="container">
+  <view class="upload-area card" bindtap="onUpload">
+    <text class="upload-icon">📤</text>
+    <text class="upload-text">点击上传固件文件</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无固件" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.name}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <view class="item-info">
+        <text class="info-text">路径: {{item.path}}</text>
+        <text class="info-text">产品ID: {{item.productId}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上传固件名称输入弹窗 -->
+  <view class="modal-mask" wx:if="{{showNameModal}}" bindtap="onCancelUpload">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">输入固件名称</text>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">固件名称</text>
+        <input class="input-field" placeholder="固件名称" bindinput="onNameInput" value="{{uploadName}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCancelUpload">取消</button>
+        <button class="btn btn-primary" bindtap="onConfirmUpload">上传</button>
+      </view>
+    </view>
+  </view>
+</view>

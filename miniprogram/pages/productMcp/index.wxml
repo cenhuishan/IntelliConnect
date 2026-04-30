@@ -1,0 +1,64 @@
+<view class="container">
+  <button class="btn btn-default endpoint-btn" bindtap="onShowEndpoint">查看MCP端点</button>
+
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无MCP服务，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.description || 'MCP #' + item.id}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <view class="item-info">
+        <text class="info-text" wx:if="{{item.url}}">URL: {{item.url}}</text>
+        <text class="info-text" wx:if="{{item.sseEndpoint}}">SSE: {{item.sseEndpoint}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <!-- 添加MCP服务 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加MCP服务</text>
+      <view class="input-item">
+        <text class="input-label">描述</text>
+        <input class="input-field" placeholder="服务描述" data-field="description" bindinput="onFormInput" value="{{form.description}}" />
+      </view>
+      <view class="input-item">
+        <text class="input-label">服务URL</text>
+        <input class="input-field" placeholder="http://..." data-field="url" bindinput="onFormInput" value="{{form.url}}" />
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">SSE端点</text>
+        <input class="input-field" placeholder="SSE端点（可选）" data-field="sseEndpoint" bindinput="onFormInput" value="{{form.sseEndpoint}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- MCP端点信息 -->
+  <view class="modal-mask" wx:if="{{showEndpointModal}}" bindtap="onCloseEndpoint">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">MCP端点信息</text>
+      <view class="endpoint-info">
+        <text class="endpoint-label">端点URL:</text>
+        <text class="endpoint-url selectable">{{endpointUrl}}</text>
+      </view>
+      <view wx:if="{{tools.length > 0}}">
+        <text class="section-title-text">可用工具</text>
+        <view class="tool-item" wx:for="{{tools}}" wx:key="name">
+          <text class="tool-name">{{item.name}}</text>
+          <text class="tool-desc">{{item.description}}</text>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-primary" bindtap="onCloseEndpoint">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

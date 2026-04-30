@@ -1,0 +1,13 @@
+.logo-card { display: flex; flex-direction: column; align-items: center; padding: 48rpx; }
+.logo-icon { font-size: 100rpx; margin-bottom: 16rpx; }
+.app-name { font-size: 40rpx; font-weight: 700; color: #1890ff; }
+.app-desc { font-size: 26rpx; color: #666; margin-top: 8rpx; }
+.version { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.section-title { font-size: 28rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.feature-item { padding: 10rpx 0; border-bottom: 1rpx solid #f5f6fa; }
+.feature-text { font-size: 26rpx; color: #555; }
+.link-card { cursor: pointer; }
+.link-label { font-size: 24rpx; color: #999; display: block; margin-bottom: 8rpx; }
+.link-url { font-size: 28rpx; color: #1890ff; display: block; }
+.link-copy { font-size: 22rpx; color: #999; margin-top: 8rpx; display: block; }
+.license-text { font-size: 26rpx; color: #555; display: block; margin-bottom: 8rpx; }

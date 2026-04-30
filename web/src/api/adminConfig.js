@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 export const getAdminConfig = (data) =>
   request({
     url: '/api/v2/adminConfig',
     method: 'get',
     headers: {
-        'Authorization': token
+        'Authorization': getToken()
       }
   })
   export const postAdminConfig = (data) =>
@@ -15,7 +15,7 @@ export const getAdminConfig = (data) =>
       url: '/api/v2/adminConfig',
       method: 'post',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -24,7 +24,7 @@ export const getAdminConfig = (data) =>
       url: '/api/v2/adminConfig',
       method: 'put',
       headers: {
-        'Authorization': token
+        'Authorization': getToken()
       },
       data
     })
@@ -33,7 +33,7 @@ export const getAdminConfig = (data) =>
         url: '/api/v2/adminConfig',
         method: 'delete',
         headers: {
-          'Authorization': token
+          'Authorization': getToken()
         },
         params
     })

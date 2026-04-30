@@ -1,0 +1,35 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无长期记忆，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">记忆 #{{item.id}}</text>
+        <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+      </view>
+      <text class="info-text desc-text">{{item.content}}</text>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">添加长期记忆</text>
+      <view class="input-item" wx:if="{{!productId && productNames.length}}">
+        <text class="input-label">产品</text>
+        <picker mode="selector" range="{{productNames}}" bindchange="onProductChange">
+          <text class="picker-text">{{productNames[0]}}</text>
+        </picker>
+      </view>
+      <view class="input-item" style="border-bottom:none">
+        <text class="input-label">内容</text>
+        <textarea class="input-field textarea-field" placeholder="记忆内容" bindinput="onFormInput" value="{{form.content}}" />
+      </view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">添加</button>
+      </view>
+    </view>
+  </view>
+</view>

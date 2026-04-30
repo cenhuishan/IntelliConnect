@@ -1,0 +1,6 @@
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.item-name { font-size: 28rpx; font-weight: 600; color: #333; }
+.action-del { font-size: 26rpx; color: #ff4d4f; }
+.memory-text { font-size: 26rpx; color: #666; line-height: 1.6; }
+.loading-tip { text-align: center; padding: 60rpx; color: #999; }
+.textarea-field { width: 100%; min-height: 200rpx; font-size: 28rpx; color: #333; padding: 16rpx; box-sizing: border-box; }

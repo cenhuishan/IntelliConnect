@@ -1,0 +1,6 @@
+.code-btn {
+  font-size: 24rpx;
+  color: #1890ff;
+  white-space: nowrap;
+  padding-left: 16rpx;
+}

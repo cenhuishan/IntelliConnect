@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import store from '@/store'
 
-const token = store.getters['auth/token']
+const getToken = () => store.getters['auth/token']
 
 // 获取产品技能列表
 export const getProductSkill = () => {
@@ -9,7 +9,7 @@ export const getProductSkill = () => {
     url: '/api/v2/productSkills',
     method: 'get',
     headers: {
-      'Authorization': token
+      'Authorization': getToken()
     }
   })
 }
@@ -23,7 +23,7 @@ export const addProductSkill = (productId, file) => {
     url: '/api/v2/productSkills',
     method: 'post',
     headers: {
-      'Authorization': token
+      'Authorization': getToken()
       // 不设置 Content-Type，让浏览器自动设置带有 boundary 的 multipart/form-data
     },
     params: {
@@ -39,7 +39,7 @@ export const deleteProductSkill = (id) => {
     url: '/api/v2/productSkills',
     method: 'delete',
     headers: {
-      'Authorization': token
+      'Authorization': getToken()
     },
     params: {
       id: id

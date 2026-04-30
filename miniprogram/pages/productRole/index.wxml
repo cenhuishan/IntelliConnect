@@ -1,0 +1,57 @@
+<view class="container">
+  <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+  <empty-view wx:elif="{{list.length === 0}}" text="暂无角色，点击+添加" />
+  <view wx:else>
+    <view class="card" wx:for="{{list}}" wx:key="id">
+      <view class="item-header">
+        <text class="item-name">{{item.assistantName}}</text>
+        <view class="item-actions">
+          <text class="action-link" catchtap="onEdit" data-item="{{item}}">编辑</text>
+          <text class="action-del" catchtap="onDelete" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+      <view class="item-info">
+        <text class="info-text">角色: {{item.role}}</text>
+        <text class="info-text">用户: {{item.userName}}</text>
+        <text class="info-text">语音: {{item.voice}}</text>
+      </view>
+      <text class="info-text desc-text">{{item.roleIntroduction}}</text>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onAdd"><text class="fab-text">+</text></view>
+
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="onCloseModal">
+    <view class="modal-content" catchtap="noop">
+      <text class="modal-title">{{editId ? '编辑角色' : '添加角色'}}</text>
+      <scroll-view scroll-y style="max-height:70vh">
+        <view class="input-item">
+          <text class="input-label">助手名称</text>
+          <input class="input-field" placeholder="助手名称" data-field="assistantName" bindinput="onFormInput" value="{{form.assistantName}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">用户名</text>
+          <input class="input-field" placeholder="用户名" data-field="userName" bindinput="onFormInput" value="{{form.userName}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">角色名称</text>
+          <input class="input-field" placeholder="角色名称" data-field="role" bindinput="onFormInput" value="{{form.role}}" />
+        </view>
+        <view class="input-item">
+          <text class="input-label">角色介绍</text>
+          <textarea class="input-field textarea-field" placeholder="角色介绍（最多6000字）" data-field="roleIntroduction" bindinput="onFormInput" value="{{form.roleIntroduction}}" maxlength="6000" />
+        </view>
+        <view class="input-item" style="border-bottom:none">
+          <text class="input-label">语音</text>
+          <picker mode="selector" range="{{voiceOptions}}" bindchange="onVoiceChange">
+            <text class="picker-text">{{form.voice || '请选择语音'}}</text>
+          </picker>
+        </view>
+      </scroll-view>
+      <view class="modal-footer">
+        <button class="btn btn-default" bindtap="onCloseModal">取消</button>
+        <button class="btn btn-primary" bindtap="onSubmit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="card logo-card">
+    <text class="logo-icon">🔗</text>
+    <text class="app-name">IntelliConnect</text>
+    <text class="app-desc">智能物联网平台</text>
+    <text class="version">v{{version}}</text>
+  </view>
+
+  <view class="card">
+    <text class="section-title">核心特性</text>
+    <view class="feature-item" wx:for="{{features}}" wx:key="*this">
+      <text class="feature-text">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="card link-card" bindtap="onCopyLink">
+    <text class="link-label">GitHub 开源地址</text>
+    <text class="link-url">github.com/ruanrongman/IntelliConnect</text>
+    <text class="link-copy">点击复制链接</text>
+  </view>
+
+  <view class="card">
+    <text class="section-title">许可证</text>
+    <text class="license-text">个人使用：Apache 2.0 协议</text>
+    <text class="license-text">商业使用：请联系创万联官方获取授权</text>
+  </view>
+</view>
